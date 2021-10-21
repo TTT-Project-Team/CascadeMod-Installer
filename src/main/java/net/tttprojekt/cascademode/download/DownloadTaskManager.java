@@ -15,7 +15,7 @@ public class DownloadTaskManager {
     private final ExecutorService executorService;
 
     public DownloadTaskManager() {
-        executorService = Executors.newCachedThreadPool((new ThreadFactoryBuilder()).setNameFormat("DownloadManager T-$d").build());
+        executorService = Executors.newCachedThreadPool((new ThreadFactoryBuilder()).setNameFormat("DownloadManager").build());
     }
 
     public DownloadTask createTask(String url, String fileDestination) {
