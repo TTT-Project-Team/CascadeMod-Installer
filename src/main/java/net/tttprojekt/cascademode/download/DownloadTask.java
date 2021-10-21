@@ -30,22 +30,24 @@ public class DownloadTask {
     }
 
 
-    public boolean isURLValid() {
+    public void isURLValid() throws IOException {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(this.downloadURL).openConnection();
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();
             if (responseCode != 200) {
-                return false;
+                System.out.println(downloadURL + " -- " + responseCode);
+                throw new IOException(String.format("Cannot download file from url '%s'. Response: %s - %s", downloadURL, responseCode, connection.getResponseMessage()));
             }
         } catch (IOException e) {
-            return false;
+            if(e.getMessage().toLowerCase().contains("response")) throw e;
+            throw new IOException(String.format("Cannot download file from url '%s'. Could not connect to url.", downloadURL));
         }
-        return true;
+
     }
 
     public void download() throws IOException {
-        if (!isURLValid()) throw new IOException("Cannot download file from url '%s'. Could not connect to url.");
+        isURLValid();
         if (isDownloading())
             throw new IllegalStateException("Could not download file. Download is currently running");
 
