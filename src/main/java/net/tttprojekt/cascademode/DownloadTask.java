@@ -1,14 +1,20 @@
 package net.tttprojekt.cascademode;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DownloadTask {
+
+    private final ExecutorService executorService = Executors.newCachedThreadPool((new ThreadFactoryBuilder()).setNameFormat("Download-Thread T-$d").build());
+
 
     private final String downloadURL;
     private final String fileDestination;
@@ -35,22 +41,34 @@ public class DownloadTask {
     }
 
     public void download() throws IOException {
-        if(!isURLValid()) throw new IOException("Cannot download file from url '%s'. Could not connect to url.");
+        if (!isURLValid()) throw new IOException("Cannot download file from url '%s'. Could not connect to url.");
+        if (isDownloading())
+            throw new IllegalStateException("Could not download file. Download is currently running");
 
-        try {
-            URL url = new URL(this.downloadURL);
-
-            try (BufferedInputStream inputStream = new BufferedInputStream(url.openStream())) {
-                FileOutputStream outputStream = new FileOutputStream(this.fileDestination);
-                byte[] dataBuffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
-                    outputStream.write(dataBuffer, 0, bytesRead);
-                }
+        executorService.submit(() -> {
+            this.downloading.set(true);
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+            try {
+                URL url = new URL(this.downloadURL);
+
+                try (BufferedInputStream inputStream = new BufferedInputStream(url.openStream())) {
+                    FileOutputStream outputStream = new FileOutputStream(this.fileDestination);
+                    byte[] dataBuffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
+                        outputStream.write(dataBuffer, 0, bytesRead);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.downloading.set(false);
+        });
     }
 
     public boolean isDownloading() {
