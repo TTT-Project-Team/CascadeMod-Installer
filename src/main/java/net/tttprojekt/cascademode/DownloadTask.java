@@ -3,8 +3,10 @@ package net.tttprojekt.cascademode;
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DownloadTask {
 
@@ -18,6 +20,19 @@ public class DownloadTask {
         this.fileDestination = destination;
     }
 
+    public boolean isURLValid() {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(this.downloadURL).openConnection();
+            connection.setRequestMethod("HEAD");
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                return false;
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
 
     public void download() {
         try {
