@@ -1,6 +1,6 @@
-package net.tttprojekt.cascademode;
+package net.tttprojekt.cascademode.download;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.SneakyThrows;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
@@ -8,12 +8,10 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DownloadTask {
-
-    private final ExecutorService executorService = Executors.newCachedThreadPool((new ThreadFactoryBuilder()).setNameFormat("Download-Thread T-$d").build());
 
 
     private final String downloadURL;
@@ -23,10 +21,14 @@ public class DownloadTask {
     private AtomicInteger downloadedBytes = new AtomicInteger();
     private long fileSize = 0;
 
-    public DownloadTask(String url, String destination) {
+    private final ExecutorService executorService;
+
+    protected DownloadTask(String url, String destination, ExecutorService executorService) {
         this.downloadURL = url;
         this.fileDestination = destination;
+        this.executorService = executorService;
     }
+
 
     public boolean isURLValid() {
         try {
@@ -59,6 +61,10 @@ public class DownloadTask {
 
     public boolean isDownloading() {
         return this.downloading.get();
+    }
+
+    public String getProgress() {
+        return String.format("%s/%s", this.downloadedBytes.get(), this.fileSize);
     }
 
     private void downloadFile() {
