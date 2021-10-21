@@ -10,11 +10,13 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = JavaVersion.VERSION_16
 
 repositories {
+    mavenCentral()
 }
 
 
 dependencies {
-
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 jar {
