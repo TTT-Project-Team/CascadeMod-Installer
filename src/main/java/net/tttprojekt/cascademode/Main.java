@@ -3,6 +3,8 @@ package net.tttprojekt.cascademode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Scanner;
+
 public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -15,9 +17,12 @@ public class Main {
         installer.createModFolder();
         installer.downloadMods();
 
+        if (shouldInstallForge()) {
+            installer.installForge();
+        }
+
         installer.stop();
     }
-
 
     private static void printInformation() {
         logger.info("");
@@ -34,6 +39,24 @@ public class Main {
         logger.info("    >>>>>>>>> This installer installs you forge and the needed mods <<<<<<<<<  ");
         logger.info("-------------------------------------------------------------------------------");
         logger.info("");
+    }
+
+    private static boolean shouldInstallForge() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Do you want to install forge? [y/n]");
+
+        boolean installForge = true;
+
+        while (true) {
+            String input = scan.next();
+            if(input.equalsIgnoreCase("y")) break;
+            if(input.equalsIgnoreCase("n")) {
+                installForge = false;
+                break;
+            }
+        }
+
+        return installForge;
     }
 
 }
