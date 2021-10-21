@@ -34,7 +34,9 @@ public class DownloadTask {
         return true;
     }
 
-    public void download() {
+    public void download() throws IOException {
+        if(!isURLValid()) throw new IOException("Cannot download file from url '%s'. Could not connect to url.");
+
         try {
             URL url = new URL(this.downloadURL);
 
