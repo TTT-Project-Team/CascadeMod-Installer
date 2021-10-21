@@ -60,6 +60,7 @@ public class DownloadTask {
             logger.info(String.format(" >> Downloaded from URL: %s", this.downloadURL));
             logger.info(String.format(" >> File Location: %s", this.fileDestination));
             this.downloading.set(false);
+            this.downloadTaskManager.removeTask(this);
         });
     }
 
