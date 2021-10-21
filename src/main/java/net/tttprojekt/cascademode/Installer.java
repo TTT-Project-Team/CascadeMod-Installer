@@ -43,12 +43,13 @@ public class Installer {
     private DownloadTask jeiDownloadTask;
 
     public Installer() {
-        logger.info("Creating download tasks");
+        logger.info("Creating download tasks...");
         this.downloadTaskManager = new DownloadTaskManager();
 
         this.modDownloadTask = downloadTaskManager.createTask(MOD_DOWNLOAD_URL, FILE_DESTINATION_MOD);
         this.optifineDownloadTask = downloadTaskManager.createTask(OPTIFINE_DOWNLOAD_URL, FILE_DESTINATION_OPTIFINE);
         this.jeiDownloadTask = downloadTaskManager.createTask(JEI_DOWNLOAD_URL, FILE_DESTINATION_JEI);
+        logger.info("Download tasks created.");
     }
 
     private boolean backupModFolder(File modFolder) {
