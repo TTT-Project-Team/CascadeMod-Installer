@@ -9,8 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.AccessDeniedException;
-import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,13 +38,14 @@ public class DownloadTask {
             HttpURLConnection connection = (HttpURLConnection) new URL(this.downloadURL).openConnection();
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();
+
             if (responseCode != 200) {
-                System.out.println(downloadURL + " -- " + responseCode);
-                throw new IOException(String.format("Cannot download file from url '%s'. Response: %s - %s", downloadURL, responseCode, connection.getResponseMessage()));
+                throw new IOException(String.format("Cannot download file. Server returned HTTP response code: %s for URL: %s", responseCode, this.downloadURL));
             }
+
         } catch (IOException e) {
-            if(e.getMessage().toLowerCase().contains("response")) throw e;
-            throw new IOException(String.format("Cannot download file from url '%s'. Could not connect to url.", downloadURL));
+            if (e.getMessage().toLowerCase().contains("response")) throw e;
+            throw new IOException(String.format("Cannot download file. Could not connect to URL: %s", this.downloadURL));
         }
 
     }
