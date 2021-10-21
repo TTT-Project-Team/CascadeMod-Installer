@@ -63,8 +63,12 @@ public class DownloadTask {
         return this.downloading.get();
     }
 
-    public String getProgress() {
-        return String.format("%s/%s", this.downloadedBytes.get(), this.fileSize);
+    public float getDownloadDifference() {
+        return (float) this.downloadedBytes.get() / (float) this.fileSize;
+    }
+
+    public int getProgress() {
+        return (int) (getDownloadDifference() * 100);
     }
 
     private void downloadFile() {
