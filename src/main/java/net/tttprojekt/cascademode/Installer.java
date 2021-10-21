@@ -104,6 +104,12 @@ public class Installer {
         }
     }
 
+    public void downloadMods() {
+        downloadTaskManager.startTask(modDownloadTask);
+        downloadTaskManager.startTask(optifineDownloadTask);
+        downloadTaskManager.startTask(jeiDownloadTask);
+    }
+
     public void stop() {
         this.downloadTaskManager.stop();
     }

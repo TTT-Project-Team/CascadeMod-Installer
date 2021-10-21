@@ -13,6 +13,7 @@ public class Main {
 
         Installer installer = new Installer();
         installer.createModFolder();
+        installer.downloadMods();
 
         installer.stop();
     }
