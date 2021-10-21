@@ -13,7 +13,12 @@ public class Main {
 
         printInformation();
 
+        logger.info("Starting installer...");
+
         Installer installer = new Installer();
+        logger.info("Installer started.");
+
+        logger.info("Starting installation...");
         installer.createModFolder();
         installer.downloadMods();
 
@@ -22,6 +27,7 @@ public class Main {
         }
 
         installer.stop();
+        logger.info("Installation finished.");
     }
 
     private static void printInformation() {
