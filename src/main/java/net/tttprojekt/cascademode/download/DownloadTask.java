@@ -1,18 +1,23 @@
 package net.tttprojekt.cascademode.download;
 
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.AccessDeniedException;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DownloadTask {
 
+    private static final Logger logger = LoggerFactory.getLogger(DownloadTask.class);
 
     private final String downloadURL;
     private final String fileDestination;
@@ -56,7 +61,9 @@ public class DownloadTask {
         this.downloading.set(true);
 
         executorService.submit(() -> {
+            logger.info(String.format("Start downloading file from '%s'...", this.downloadURL));
             downloadFile();
+            logger.info("Downloaded file.");
             this.downloading.set(false);
         });
     }
