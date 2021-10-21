@@ -47,32 +47,30 @@ public class DownloadTask {
 
         executorService.submit(() -> {
             this.downloading.set(true);
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                URL url = new URL(this.downloadURL);
-
-                try (BufferedInputStream inputStream = new BufferedInputStream(url.openStream())) {
-                    FileOutputStream outputStream = new FileOutputStream(this.fileDestination);
-                    byte[] dataBuffer = new byte[1024];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
-                        outputStream.write(dataBuffer, 0, bytesRead);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            downloadFile();
             this.downloading.set(false);
         });
     }
 
     public boolean isDownloading() {
         return this.downloading.get();
+    }
+
+    private void downloadFile() {
+        try {
+            URL url = new URL(this.downloadURL);
+
+            try (BufferedInputStream inputStream = new BufferedInputStream(url.openStream())) {
+                FileOutputStream outputStream = new FileOutputStream(this.fileDestination);
+                byte[] dataBuffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
+                    outputStream.write(dataBuffer, 0, bytesRead);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
