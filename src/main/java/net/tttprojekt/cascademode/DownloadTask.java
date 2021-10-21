@@ -20,6 +20,8 @@ public class DownloadTask {
     private final String fileDestination;
 
     private AtomicBoolean downloading = new AtomicBoolean();
+    private AtomicInteger downloadedBytes = new AtomicInteger();
+    private long fileSize = 0;
 
     public DownloadTask(String url, String destination) {
         this.downloadURL = url;
@@ -45,8 +47,11 @@ public class DownloadTask {
         if (isDownloading())
             throw new IllegalStateException("Could not download file. Download is currently running");
 
+        this.fileSize = getFileSize();
+        this.downloadedBytes.set(0);
+        this.downloading.set(true);
+
         executorService.submit(() -> {
-            this.downloading.set(true);
             downloadFile();
             this.downloading.set(false);
         });
@@ -66,11 +71,19 @@ public class DownloadTask {
                 int bytesRead;
                 while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
                     outputStream.write(dataBuffer, 0, bytesRead);
+                    this.downloadedBytes.addAndGet(bytesRead);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @SneakyThrows
+    private long getFileSize() {
+        HttpURLConnection httpConnection = (HttpURLConnection) new URL(this.downloadURL).openConnection();
+        httpConnection.setRequestMethod("HEAD");
+        return httpConnection.getContentLengthLong();
     }
 
 }
