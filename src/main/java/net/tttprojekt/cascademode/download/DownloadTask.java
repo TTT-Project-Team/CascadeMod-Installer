@@ -76,8 +76,8 @@ public class DownloadTask {
         try {
             URL url = new URL(this.downloadURL);
 
-            try (BufferedInputStream inputStream = new BufferedInputStream(url.openStream())) {
-                FileOutputStream outputStream = new FileOutputStream(this.fileDestination);
+            try (BufferedInputStream inputStream = new BufferedInputStream(url.openStream());
+                 FileOutputStream outputStream = new FileOutputStream(this.fileDestination)) {
                 byte[] dataBuffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
