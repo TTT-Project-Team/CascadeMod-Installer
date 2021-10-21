@@ -54,9 +54,68 @@ public class Installer {
         this.jeiDownloadTask = downloadTaskManager.createTask(JEI_DOWNLOAD_URL, FILE_DESTINATION_JEI);
     }
 
+    private boolean backupModFolder(File modFolder) {
+        boolean emptyDirectory = true;
+
+        try {
+            emptyDirectory = FileUtils.isEmptyDirectory(modFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (modFolder.exists() && !emptyDirectory) {
+            String backupFolderName = String.format("%s - tttmp-installer backup [%s]", MODS_FOLDER, getRandomHexString(8));
+            File modFolderBackup = new File(backupFolderName);
+            logger.info(String.format("Backing up mod folder to '%s'...", modFolderBackup.getPath()));
+            try {
+                FileUtils.copyDirectory(modFolder, modFolderBackup);
+            } catch (IOException e) {
+                return false;
+            }
+            logger.info("Successfully backed up mod folder.");
+        }
+        return true;
+    }
+
+    public void createModFolder() {
+        File modFolder = new File(MODS_FOLDER);
+        if (!backupModFolder(modFolder)) {
+            logger.error("Error while backing up mod folder.");
+            System.exit(-1);
+            return;
+        }
+
+        if (modFolder.exists()) {
+            try {
+                logger.info("Deleting old mod folder...");
+                FileUtils.deleteDirectory(modFolder);
+                logger.info("Successfully deleted mod folder.");
+            } catch (IOException e) {
+                logger.error("Error while deleting mod folder", e);
+            }
+        }
+
+        logger.info("Creating new mod folder...");
+        if (modFolder.mkdirs()) {
+            logger.info("Successfully created mod folder.");
+        } else {
+            logger.error("Error while creating mod folder.");
+            System.exit(-1);
+        }
+    }
 
     public void stop() {
         this.downloadTaskManager.stop();
+    }
+
+    private String getRandomHexString(int numchars) {
+        SplittableRandom r = new SplittableRandom();
+        StringBuffer sb = new StringBuffer();
+        while (sb.length() < numchars) {
+            sb.append(Integer.toHexString(r.nextInt()));
+        }
+
+        return sb.toString().substring(0, numchars);
     }
 
 }
