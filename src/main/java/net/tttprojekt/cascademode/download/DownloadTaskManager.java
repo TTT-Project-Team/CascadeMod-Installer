@@ -54,4 +54,7 @@ public class DownloadTaskManager {
         }
     }
 
+    protected ExecutorService getExecutorService() {
+        return this.executorService;
+    }
 }
