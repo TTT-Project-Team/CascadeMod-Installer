@@ -113,6 +113,7 @@ public class Installer {
         downloadTaskManager.startAsyncTask(modDownloadTask);
         downloadTaskManager.startAsyncTask(optifineDownloadTask);
         downloadTaskManager.startAsyncTask(jeiDownloadTask);
+        this.downloadTaskManager.waitForDownloads();
     }
 
     public void installForge() {
