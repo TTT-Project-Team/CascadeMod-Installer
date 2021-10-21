@@ -25,9 +25,18 @@ public class DownloadTaskManager {
         return new DownloadTask(url, fileDestination, executorService);
     }
 
+    public void startAsyncTask(DownloadTask task) {
+        try {
+            task.download();
+        } catch (IOException e) {
+            logger.error("An unexpected error occurred in a download task.", e);
+        }
+    }
+
     public void startTask(DownloadTask task) {
         try {
             task.download();
+            task.block();
         } catch (IOException e) {
             logger.error("An unexpected error occurred in a download task.", e);
         }

@@ -105,9 +105,9 @@ public class Installer {
     }
 
     public void downloadMods() {
-        downloadTaskManager.startTask(modDownloadTask);
-        downloadTaskManager.startTask(optifineDownloadTask);
-        downloadTaskManager.startTask(jeiDownloadTask);
+        downloadTaskManager.startAsyncTask(modDownloadTask);
+        downloadTaskManager.startAsyncTask(optifineDownloadTask);
+        downloadTaskManager.startAsyncTask(jeiDownloadTask);
     }
 
     public void stop() {

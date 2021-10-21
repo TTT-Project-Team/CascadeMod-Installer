@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DownloadTask {
 
@@ -63,6 +62,10 @@ public class DownloadTask {
             logger.info(String.format(" >> File Location: %s", this.fileDestination));
             this.downloading.set(false);
         });
+    }
+
+    protected void block() {
+        while (isDownloading()) ;
     }
 
     public boolean isDownloading() {
