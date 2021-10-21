@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+def mainClass = "net.tttprojekt.cascademode.Main"
+
+group 'net.tttprojekt'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_16
+
+repositories {
+}
+
+
+dependencies {
+
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClass
+    }
+}
