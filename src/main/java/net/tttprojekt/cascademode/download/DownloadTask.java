@@ -21,8 +21,6 @@ public class DownloadTask {
     private final String fileDestination;
 
     private AtomicBoolean downloading = new AtomicBoolean();
-    private AtomicInteger downloadedBytes = new AtomicInteger();
-    private long fileSize = 0;
 
     private final ExecutorService executorService;
 
@@ -55,8 +53,6 @@ public class DownloadTask {
         if (isDownloading())
             throw new IllegalStateException("Could not download file. Download is currently running");
 
-        this.fileSize = getFileSize();
-        this.downloadedBytes.set(0);
         this.downloading.set(true);
 
         executorService.submit(() -> {
@@ -73,14 +69,6 @@ public class DownloadTask {
         return this.downloading.get();
     }
 
-    public float getDownloadDifference() {
-        return (float) this.downloadedBytes.get() / (float) this.fileSize;
-    }
-
-    public int getProgress() {
-        return (int) (getDownloadDifference() * 100);
-    }
-
     private void downloadFile() {
         try {
             URL url = new URL(this.downloadURL);
@@ -91,7 +79,6 @@ public class DownloadTask {
                 int bytesRead;
                 while ((bytesRead = inputStream.read(dataBuffer, 0, 1024)) != -1) {
                     outputStream.write(dataBuffer, 0, bytesRead);
-                    this.downloadedBytes.addAndGet(bytesRead);
                 }
             }
         } catch (IOException e) {
