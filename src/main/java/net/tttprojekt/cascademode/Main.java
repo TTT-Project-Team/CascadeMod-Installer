@@ -11,6 +11,10 @@ public class Main {
 
         printInformation();
 
+        Installer installer = new Installer();
+        installer.createModFolder();
+
+        installer.stop();
     }
 
 
