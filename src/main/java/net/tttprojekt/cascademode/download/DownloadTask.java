@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DownloadTask {
@@ -21,12 +20,12 @@ public class DownloadTask {
 
     private AtomicBoolean downloading = new AtomicBoolean();
 
-    private final ExecutorService executorService;
+    private final DownloadTaskManager downloadTaskManager;
 
-    protected DownloadTask(String url, String destination, ExecutorService executorService) {
+    protected DownloadTask(String url, String destination, DownloadTaskManager downloadTaskManager) {
         this.downloadURL = url;
         this.fileDestination = destination;
-        this.executorService = executorService;
+        this.downloadTaskManager = downloadTaskManager;
     }
 
 
@@ -54,7 +53,7 @@ public class DownloadTask {
 
         this.downloading.set(true);
 
-        executorService.submit(() -> {
+        this.downloadTaskManager.getExecutorService().submit(() -> {
             logger.info(String.format("Start downloading file from '%s'...", this.downloadURL));
             downloadFile();
             logger.info("Successfully downloaded file.");
