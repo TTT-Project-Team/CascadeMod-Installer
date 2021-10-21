@@ -63,7 +63,9 @@ public class DownloadTask {
         executorService.submit(() -> {
             logger.info(String.format("Start downloading file from '%s'...", this.downloadURL));
             downloadFile();
-            logger.info("Downloaded file.");
+            logger.info("Successfully downloaded file.");
+            logger.info(String.format(" >> Downloaded from URL: %s", this.downloadURL));
+            logger.info(String.format(" >> File Location: %s", this.fileDestination));
             this.downloading.set(false);
         });
     }
