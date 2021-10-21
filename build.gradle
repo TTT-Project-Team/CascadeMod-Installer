@@ -1,8 +1,10 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 def mainClass = "net.tttprojekt.cascademode.Main"
+tasks.build.dependsOn tasks.shadowJar
 
 group 'net.tttprojekt'
 version '1.0-SNAPSHOT'
@@ -15,6 +17,7 @@ repositories {
 
 
 dependencies {
+    implementation 'com.google.guava:guava:31.0.1-jre'
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
