@@ -19,6 +19,9 @@ public class DownloadTaskManager {
     }
 
     public DownloadTask createTask(String url, String fileDestination) {
+        logger.info("Creating new download task");
+        logger.info(String.format(">> Download url: %s ", url));
+        logger.info(String.format(">> File location: %s ", fileDestination));
         return new DownloadTask(url, fileDestination, executorService);
     }
 
