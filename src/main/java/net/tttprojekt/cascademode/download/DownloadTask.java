@@ -51,7 +51,7 @@ public class DownloadTask {
 
     }
 
-    public void download() throws IOException {
+    protected void download() throws IOException {
         isURLValid();
         if (isDownloading())
             throw new IllegalStateException("Could not download file. Download is currently running");
