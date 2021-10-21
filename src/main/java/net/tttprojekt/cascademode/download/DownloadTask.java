@@ -89,11 +89,4 @@ public class DownloadTask {
         }
     }
 
-    @SneakyThrows
-    private long getFileSize() {
-        HttpURLConnection httpConnection = (HttpURLConnection) new URL(this.downloadURL).openConnection();
-        httpConnection.setRequestMethod("HEAD");
-        return httpConnection.getContentLengthLong();
-    }
-
 }
