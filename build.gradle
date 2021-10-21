@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+def mainClass = "net.tttprojekt.cascademode.Main"
+tasks.build.dependsOn tasks.shadowJar
+
+group 'net.tttprojekt'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_16
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.14.1'
+    implementation 'commons-io:commons-io:2.11.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClass
+    }
+}
