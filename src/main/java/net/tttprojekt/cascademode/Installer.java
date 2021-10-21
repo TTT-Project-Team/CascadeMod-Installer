@@ -34,7 +34,7 @@ public class Installer {
 
     private static final String MOD_DOWNLOAD_URL = "https://github.com/xNoci/CascadeMod-Installer/blob/dev/modfile/Cascade%20Mod.jar?raw=true";
     private static final String OPTIFINE_DOWNLOAD_URL = "https://optifine.net/downloadx?f=OptiFine_1.12.2_HD_U_G5.jar&x=95dd0de8fe2ef755e347876857646d28";
-    private static final String JEI_DOWNLOAD_URL = "https://www.curseforge.com/minecraft/mc-mods/jei/download/3040523/file";
+    private static final String JEI_DOWNLOAD_URL = "https://media.forgecdn.net/files/3040/523/jei_1.12.2-4.16.1.301.jar";
 
     private static final String FILE_DESTINATION_MOD = MODS_FOLDER + "/Cascade Mod.jar";
     private static final String FILE_DESTINATION_OPTIFINE = MODS_FOLDER + "/OptiFine_1.12.2_HD_U_G5.jar";
