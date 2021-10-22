@@ -162,24 +162,30 @@ public class GUI {
         if (this.modInstaller == null) return;
         toggleElements(false);
 
-        if (this.checkBoxCreateBackup.isSelected()) {
-            this.modInstaller.backupModFolder();
-        }
-        this.modInstaller.createModFolder();
-
-        this.modInstaller.downloadMods(() -> {
+        SwingUtilities.invokeLater(() -> {
+            if (this.checkBoxCreateBackup.isSelected()) {
+                this.modInstaller.backupModFolder();
+            }
+            this.modInstaller.createModFolder();
+            this.modInstaller.downloadMods(() -> {
+                toggleElements(true);
+            });
         });
+
+
     }
 
     private void onButtonDownloadForgeClicked() {
         if (this.forgeInstaller == null) return;
         toggleElements(false);
 
-        this.forgeInstaller.setup();
-        this.forgeInstaller.download(() -> {
-            toggleElements(true);
-            this.forgeInstaller.install();
-            this.forgeInstaller.cleanUp();
+        SwingUtilities.invokeLater(() -> {
+            this.forgeInstaller.setup();
+            this.forgeInstaller.download(() -> {
+                this.forgeInstaller.install();
+                this.forgeInstaller.cleanUp();
+                toggleElements(true);
+            });
         });
     }
 
