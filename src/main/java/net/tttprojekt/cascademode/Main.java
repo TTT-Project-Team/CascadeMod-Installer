@@ -1,5 +1,6 @@
 package net.tttprojekt.cascademode;
 
+import net.tttprojekt.cascademode.installer.Installer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +56,8 @@ public class Main {
 
         while (true) {
             String input = scan.next();
-            if(input.equalsIgnoreCase("y")) break;
-            if(input.equalsIgnoreCase("n")) {
+            if (input.equalsIgnoreCase("y")) break;
+            if (input.equalsIgnoreCase("n")) {
                 installForge = false;
                 break;
             }

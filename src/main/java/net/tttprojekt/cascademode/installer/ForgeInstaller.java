@@ -1,4 +1,4 @@
-package net.tttprojekt.cascademode;
+package net.tttprojekt.cascademode.installer;
 
 import com.google.common.collect.Lists;
 import lombok.SneakyThrows;

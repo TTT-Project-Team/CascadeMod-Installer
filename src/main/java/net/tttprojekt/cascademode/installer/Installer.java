@@ -1,4 +1,4 @@
-package net.tttprojekt.cascademode;
+package net.tttprojekt.cascademode.installer;
 
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
