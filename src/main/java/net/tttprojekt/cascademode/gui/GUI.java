@@ -75,6 +75,11 @@ public class GUI {
 
     private void createComponents() {
         createCheckBoxes();
+        createLabel();
+        createButtons();
+    }
+
+    private void createLabel() {
         panelStatus = new JPanel();
         panelStatus.setLayout(new BoxLayout(this.panelStatus, BoxLayout.Y_AXIS));
 
@@ -87,9 +92,6 @@ public class GUI {
         labeStatus = new JLabel();
         labeStatus.setText("Click a button to start downloading...");
         this.panelStatus.add(labeStatus);
-
-
-        createButtons();
     }
 
     private void createCheckBoxes() {
