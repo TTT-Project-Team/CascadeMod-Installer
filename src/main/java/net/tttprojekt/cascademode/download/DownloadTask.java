@@ -1,6 +1,5 @@
 package net.tttprojekt.cascademode.download;
 
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

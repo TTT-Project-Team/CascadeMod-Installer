@@ -1,4 +1,4 @@
-package net.tttprojekt.cascademode;
+package net.tttprojekt.cascademode.installer;
 
 import com.google.common.collect.Lists;
 import lombok.SneakyThrows;
@@ -12,7 +12,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class ForgeInstaller {
+public class ForgeInstaller implements IForgeInstaller {
 
     private static final Logger logger = LoggerFactory.getLogger(ForgeInstaller.class);
     private static final String FORGE_INSTALLER_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2855/forge-1.12.2-14.23.5.2855-installer.jar";
@@ -23,8 +23,10 @@ public class ForgeInstaller {
     private final DownloadTask forgeInstallerDownloadTask;
 
     public ForgeInstaller(DownloadTaskManager downloadTaskManager) {
+        logger.info("Initialising forge installer...");
         this.downloadTaskManager = downloadTaskManager;
         this.forgeInstallerDownloadTask = downloadTaskManager.createTask(FORGE_INSTALLER_URL, FORGE_INSTALLER_FILE);
+        logger.info("Forge installer initialised.");
     }
 
     private static File getForgeInstallFolderPath() {
@@ -33,8 +35,8 @@ public class ForgeInstaller {
         return new File(path);
     }
 
+    @Override
     public void setup() {
-
         File forgeInstallFolder = new File(FORGE_INSTALL_FOLDER_PATH);
         logger.info("Creating installation folder...");
         if (forgeInstallFolder.exists()) {
@@ -49,10 +51,13 @@ public class ForgeInstaller {
         logger.info("Successfully created installation folder.");
     }
 
-    public void download() {
+    @Override
+    public void download(Runnable runnable) {
         this.downloadTaskManager.startTask(this.forgeInstallerDownloadTask);
+        runnable.run();
     }
 
+    @Override
     public void install() {
         ProcessBuilder pb = new ProcessBuilder("java", "-jar", FORGE_INSTALLER_FILE);
         pb.directory(new File(FORGE_INSTALL_FOLDER_PATH));
@@ -72,6 +77,7 @@ public class ForgeInstaller {
         }
     }
 
+    @Override
     public void cleanUp() {
         logger.info("Cleaning up forge installation...");
         try {

@@ -1,5 +1,6 @@
-package net.tttprojekt.cascademode;
+package net.tttprojekt.cascademode.installer;
 
+import lombok.Setter;
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
 import org.apache.commons.io.FileUtils;
@@ -12,9 +13,9 @@ import java.util.Locale;
 import java.util.SplittableRandom;
 
 
-public class Installer {
+public class ModInstaller implements IModInstaller {
 
-    private static final Logger logger = LoggerFactory.getLogger(Installer.class);
+    private static final Logger logger = LoggerFactory.getLogger(ModInstaller.class);
 
     private static final String MOD_DOWNLOAD_URL = "https://github.com/xNoci/CascadeMod-Installer/blob/dev/modfile/Cascade%20Mod.jar?raw=true";
     private static final String OPTIFINE_DOWNLOAD_URL = "https://optifine.net/downloadx?f=OptiFine_1.12.2_HD_U_G5.jar&x=95dd0de8fe2ef755e347876857646d28";
@@ -37,31 +38,31 @@ public class Installer {
         return new File(userHomeDir, mcDir);
     }
 
-    private DownloadTaskManager downloadTaskManager;
-    private DownloadTask modDownloadTask;
-    private DownloadTask optifineDownloadTask;
-    private DownloadTask jeiDownloadTask;
+    private final DownloadTaskManager downloadTaskManager;
+    private final DownloadTask modDownloadTask;
+    private final DownloadTask optiFineDownloadTask;
+    private final DownloadTask jeiDownloadTask;
 
-    private final ForgeInstaller forgeInstaller;
+    @Setter private boolean createBackup;
+    @Setter private boolean downloadOptiFine;
+    @Setter private boolean downloadJustEnoughItems;
 
-    public Installer() {
+    public ModInstaller(DownloadTaskManager downloadTaskManager) {
         logger.info("Creating download tasks...");
-        this.downloadTaskManager = new DownloadTaskManager();
+        this.downloadTaskManager = downloadTaskManager;
 
         this.modDownloadTask = downloadTaskManager.createTask(MOD_DOWNLOAD_URL, FILE_DESTINATION_MOD);
-        this.optifineDownloadTask = downloadTaskManager.createTask(OPTIFINE_DOWNLOAD_URL, FILE_DESTINATION_OPTIFINE);
+        this.optiFineDownloadTask = downloadTaskManager.createTask(OPTIFINE_DOWNLOAD_URL, FILE_DESTINATION_OPTIFINE);
         this.jeiDownloadTask = downloadTaskManager.createTask(JEI_DOWNLOAD_URL, FILE_DESTINATION_JEI);
         logger.info("Download tasks created.");
 
-        logger.info("Initialising forge installer...");
-        this.forgeInstaller = new ForgeInstaller(this.downloadTaskManager);
-        logger.info("Forge installer initialised.");
-
     }
 
-    private boolean backupModFolder(File modFolder) {
+    @Override
+    public boolean backupModFolder() {
         boolean emptyDirectory = true;
 
+        File modFolder = new File(MODS_FOLDER);
         try {
             emptyDirectory = FileUtils.isEmptyDirectory(modFolder);
         } catch (IOException e) {
@@ -82,13 +83,9 @@ public class Installer {
         return true;
     }
 
+    @Override
     public void createModFolder() {
         File modFolder = new File(MODS_FOLDER);
-        if (!backupModFolder(modFolder)) {
-            logger.error("Error while backing up mod folder.");
-            System.exit(-1);
-            return;
-        }
 
         if (modFolder.exists()) {
             try {
@@ -109,24 +106,16 @@ public class Installer {
         }
     }
 
-    public void downloadMods() {
+    @Override
+    public void downloadMods(Runnable downloadRunnable) {
         downloadTaskManager.startAsyncTask(modDownloadTask);
-        downloadTaskManager.startAsyncTask(optifineDownloadTask);
-        downloadTaskManager.startAsyncTask(jeiDownloadTask);
+        if (downloadOptiFine)
+            downloadTaskManager.startAsyncTask(optiFineDownloadTask);
+        if (downloadJustEnoughItems)
+            downloadTaskManager.startAsyncTask(jeiDownloadTask);
+
         this.downloadTaskManager.waitForDownloads();
-    }
-
-    public void installForge() {
-        logger.info("Installing forge...");
-        forgeInstaller.setup();
-        forgeInstaller.download();
-        forgeInstaller.install();
-        forgeInstaller.cleanUp();
-        logger.info("Finished forge installation.");
-    }
-
-    public void stop() {
-        this.downloadTaskManager.stop();
+        downloadRunnable.run();
     }
 
     private String getRandomHexString(int numchars) {
