@@ -17,10 +17,8 @@ public class GUI {
     private JFrame mainFrame;
     private GridBagConstraints bagConstraints;
 
-    private JLabel labeStatus;
 
     private JPanel checkBoxPanel;
-    private JPanel panelStatus;
     private JPanel buttonPanel;
 
     private JCheckBox checkBoxCreateBackup;
@@ -75,23 +73,7 @@ public class GUI {
 
     private void createComponents() {
         createCheckBoxes();
-        createLabel();
         createButtons();
-    }
-
-    private void createLabel() {
-        panelStatus = new JPanel();
-        panelStatus.setLayout(new BoxLayout(this.panelStatus, BoxLayout.Y_AXIS));
-
-        this.bagConstraints.gridx = 1;
-        this.bagConstraints.gridy = 0;
-        this.bagConstraints.insets = new Insets(0, 0, 20, 20);
-        this.bagConstraints.weightx = 1;
-        this.mainFrame.add(this.panelStatus, this.bagConstraints);
-
-        labeStatus = new JLabel();
-        labeStatus.setText("Click a button to start downloading...");
-        this.panelStatus.add(labeStatus);
     }
 
     private void createCheckBoxes() {
@@ -101,7 +83,7 @@ public class GUI {
 
         this.bagConstraints.gridx = 0;
         this.bagConstraints.gridy = 0;
-        this.bagConstraints.insets = new Insets(20, 20, 20, 200);
+        this.bagConstraints.insets = new Insets(20, 50, 20, 50);
         this.bagConstraints.weightx = 1;
 
         this.mainFrame.add(this.checkBoxPanel, this.bagConstraints);
@@ -133,9 +115,10 @@ public class GUI {
         this.buttonPanel = new JPanel();
         this.buttonPanel.setLayout(new BoxLayout(this.buttonPanel, BoxLayout.X_AXIS));
 
-        this.bagConstraints.gridx = 1;
-        this.bagConstraints.gridy = 0;
-        this.bagConstraints.insets = new Insets(0, 0, -50, 20);
+        this.bagConstraints.gridx = 0;
+        this.bagConstraints.gridy = 1;
+        this.bagConstraints.ipady = 5;
+        this.bagConstraints.insets = new Insets(0, 50, 20, 50);
         this.bagConstraints.weightx = 1;
 
         this.mainFrame.add(this.buttonPanel, this.bagConstraints);
@@ -178,7 +161,6 @@ public class GUI {
     private void onButtonDownloadModsClicked() {
         if (this.modInstaller == null) return;
         toggleElements(false);
-        labeStatus.setText("Downloading mods...");
 
         if (this.checkBoxCreateBackup.isSelected()) {
             this.modInstaller.backupModFolder();
@@ -186,20 +168,16 @@ public class GUI {
         this.modInstaller.createModFolder();
 
         this.modInstaller.downloadMods(() -> {
-            toggleElements(true);
-            labeStatus.setText("Mods downloaded.");
         });
     }
 
     private void onButtonDownloadForgeClicked() {
         if (this.forgeInstaller == null) return;
         toggleElements(false);
-        labeStatus.setText("Downloading forge...");
 
         this.forgeInstaller.setup();
         this.forgeInstaller.download(() -> {
             toggleElements(true);
-            labeStatus.setText("Forge downloaded.");
             this.forgeInstaller.install();
             this.forgeInstaller.cleanUp();
         });

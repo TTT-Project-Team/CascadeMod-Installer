@@ -29,7 +29,7 @@ public class Launcher {
         this.forgeInstaller = new ForgeInstaller(this.downloadTaskManager);
         logger.info("Launcher created.");
 
-        float aspectRatio = (float) 16 / 10;
+        float aspectRatio = (float) 9 / 16;
         int height = 400;
         int width = (int) (height * aspectRatio);
 
