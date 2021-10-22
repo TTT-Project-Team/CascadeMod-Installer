@@ -52,8 +52,9 @@ public class ForgeInstaller implements IForgeInstaller {
     }
 
     @Override
-    public void download() {
+    public void download(Runnable runnable) {
         this.downloadTaskManager.startTask(this.forgeInstallerDownloadTask);
+        runnable.run();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package net.tttprojekt.cascademode.installer;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
 import org.apache.commons.io.FileUtils;
@@ -37,17 +39,21 @@ public class ModInstaller implements IModInstaller {
         return new File(userHomeDir, mcDir);
     }
 
-    private DownloadTaskManager downloadTaskManager;
-    private DownloadTask modDownloadTask;
-    private DownloadTask optifineDownloadTask;
-    private DownloadTask jeiDownloadTask;
+    private final DownloadTaskManager downloadTaskManager;
+    private final DownloadTask modDownloadTask;
+    private final DownloadTask optiFineDownloadTask;
+    private final DownloadTask jeiDownloadTask;
+
+    @Setter private boolean createBackup;
+    @Setter private boolean downloadOptiFine;
+    @Setter private boolean downloadJustEnoughItems;
 
     public ModInstaller(DownloadTaskManager downloadTaskManager) {
         logger.info("Creating download tasks...");
         this.downloadTaskManager = downloadTaskManager;
 
         this.modDownloadTask = downloadTaskManager.createTask(MOD_DOWNLOAD_URL, FILE_DESTINATION_MOD);
-        this.optifineDownloadTask = downloadTaskManager.createTask(OPTIFINE_DOWNLOAD_URL, FILE_DESTINATION_OPTIFINE);
+        this.optiFineDownloadTask = downloadTaskManager.createTask(OPTIFINE_DOWNLOAD_URL, FILE_DESTINATION_OPTIFINE);
         this.jeiDownloadTask = downloadTaskManager.createTask(JEI_DOWNLOAD_URL, FILE_DESTINATION_JEI);
         logger.info("Download tasks created.");
 
@@ -102,11 +108,15 @@ public class ModInstaller implements IModInstaller {
     }
 
     @Override
-    public void downloadMods() {
+    public void downloadMods(Runnable downloadRunnable) {
         downloadTaskManager.startAsyncTask(modDownloadTask);
-        downloadTaskManager.startAsyncTask(optifineDownloadTask);
-        downloadTaskManager.startAsyncTask(jeiDownloadTask);
+        if (downloadOptiFine)
+            downloadTaskManager.startAsyncTask(optiFineDownloadTask);
+        if (downloadJustEnoughItems)
+            downloadTaskManager.startAsyncTask(jeiDownloadTask);
+
         this.downloadTaskManager.waitForDownloads();
+        downloadRunnable.run();
     }
 
     private String getRandomHexString(int numchars) {

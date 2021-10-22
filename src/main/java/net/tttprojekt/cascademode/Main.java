@@ -11,31 +11,10 @@ public class Main {
 
     public static void main(String[] args) {
         printInformation();
-
         logger.info("Starting application...");
-
-        Launcher launcher = new Launcher();
+        new Launcher();
         logger.info("Application started.");
 
-        logger.info("Starting installation...");
-
-        if (!launcher.getModInstaller().backupModFolder()) {
-            logger.error("Error while backing up mod folder.");
-            System.exit(-1);
-            return;
-        }
-        launcher.getModInstaller().createModFolder();
-        launcher.getModInstaller().downloadMods();
-
-        if (shouldInstallForge()) {
-            launcher.getForgeInstaller().setup();
-            launcher.getForgeInstaller().download();
-            launcher.getForgeInstaller().install();
-            launcher.getForgeInstaller().cleanUp();
-        }
-
-        launcher.exit();
-        logger.info("Installation finished.");
     }
 
     private static void printInformation() {
