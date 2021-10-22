@@ -1,6 +1,7 @@
 package net.tttprojekt.cascademode.gui;
 
 import lombok.Setter;
+import net.tttprojekt.cascademode.Main;
 import net.tttprojekt.cascademode.installer.IForgeInstaller;
 import net.tttprojekt.cascademode.installer.IModInstaller;
 
@@ -14,9 +15,10 @@ public class GUI {
     private final int width;
     private final int height;
 
+    private final ImageIcon imageIcon;
+
     private JFrame mainFrame;
     private GridBagConstraints bagConstraints;
-
 
     private JPanel checkBoxPanel;
     private JPanel buttonPanel;
@@ -39,7 +41,7 @@ public class GUI {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-
+        this.imageIcon = new ImageIcon(Main.class.getClassLoader().getResource("installer-icon.png"));
         this.windowClose = windowClose;
 
         this.title = title;
@@ -58,6 +60,7 @@ public class GUI {
         this.mainFrame.setResizable(false);
         this.mainFrame.setLocationRelativeTo(null);
         this.mainFrame.setLayout(new GridBagLayout());
+        this.mainFrame.setIconImage(this.imageIcon.getImage());
 
         this.mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -191,6 +194,7 @@ public class GUI {
 
     private JButton createButton(String text, ActionListener actionListener) {
         JButton jButton = new JButton(text);
+        jButton.setFocusPainted(false);
         jButton.addActionListener(actionListener);
 
         return jButton;
