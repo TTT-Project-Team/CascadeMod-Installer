@@ -141,34 +141,10 @@ public class GUI {
         this.mainFrame.add(this.buttonPanel, this.bagConstraints);
 
         this.buttonDownloadMods = createButton("Download Mods", action -> {
-            if (this.modInstaller == null) return;
-            toggleElements(false);
-            labeStatus.setText("Downloading mods...");
-
-            if (this.checkBoxCreateBackup.isSelected()) {
-                this.modInstaller.backupModFolder();
-            }
-            this.modInstaller.createModFolder();
-
-            this.modInstaller.downloadMods(() -> {
-                toggleElements(true);
-                labeStatus.setText("Mods downloaded.");
-            });
-
-
+            onButtonDownloadModsClicked();
         });
         this.buttonDownloadForge = createButton("Download Forge", action -> {
-            if (this.forgeInstaller == null) return;
-            toggleElements(false);
-            labeStatus.setText("Downloading forge...");
-
-            this.forgeInstaller.setup();
-            this.forgeInstaller.download(() -> {
-                toggleElements(true);
-                labeStatus.setText("Forge downloaded.");
-                this.forgeInstaller.install();
-                this.forgeInstaller.cleanUp();
-            });
+            onButtonDownloadForgeClicked();
         });
 
         this.buttonPanel.add(this.buttonDownloadMods);
@@ -197,6 +173,36 @@ public class GUI {
         checkBox.addItemListener(itemListener);
 
         return checkBox;
+    }
+
+    private void onButtonDownloadModsClicked() {
+        if (this.modInstaller == null) return;
+        toggleElements(false);
+        labeStatus.setText("Downloading mods...");
+
+        if (this.checkBoxCreateBackup.isSelected()) {
+            this.modInstaller.backupModFolder();
+        }
+        this.modInstaller.createModFolder();
+
+        this.modInstaller.downloadMods(() -> {
+            toggleElements(true);
+            labeStatus.setText("Mods downloaded.");
+        });
+    }
+
+    private void onButtonDownloadForgeClicked() {
+        if (this.forgeInstaller == null) return;
+        toggleElements(false);
+        labeStatus.setText("Downloading forge...");
+
+        this.forgeInstaller.setup();
+        this.forgeInstaller.download(() -> {
+            toggleElements(true);
+            labeStatus.setText("Forge downloaded.");
+            this.forgeInstaller.install();
+            this.forgeInstaller.cleanUp();
+        });
     }
 
     private JButton createButton(String text, ActionListener actionListener) {
