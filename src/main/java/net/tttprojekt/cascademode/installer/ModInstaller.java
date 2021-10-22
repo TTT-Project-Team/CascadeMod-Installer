@@ -1,6 +1,5 @@
 package net.tttprojekt.cascademode.installer;
 
-import lombok.Getter;
 import lombok.Setter;
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;

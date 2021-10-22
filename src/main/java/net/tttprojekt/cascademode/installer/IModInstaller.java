@@ -1,7 +1,5 @@
 package net.tttprojekt.cascademode.installer;
 
-import java.util.function.Consumer;
-
 public interface IModInstaller {
 
     boolean backupModFolder();

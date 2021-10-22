@@ -34,22 +34,4 @@ public class Main {
         logger.info("");
     }
 
-    private static boolean shouldInstallForge() {
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Do you want to install forge? [y/n]");
-
-        boolean installForge = true;
-
-        while (true) {
-            String input = scan.next();
-            if (input.equalsIgnoreCase("y")) break;
-            if (input.equalsIgnoreCase("n")) {
-                installForge = false;
-                break;
-            }
-        }
-
-        return installForge;
-    }
-
 }
