@@ -1,6 +1,5 @@
 package net.tttprojekt.cascademode;
 
-import net.tttprojekt.cascademode.installer.Installer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,23 +10,31 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-
         printInformation();
 
-        logger.info("Starting installer...");
+        logger.info("Starting application...");
 
-        Installer installer = new Installer();
-        logger.info("Installer started.");
+        Launcher launcher = new Launcher();
+        logger.info("Application started.");
 
         logger.info("Starting installation...");
-        installer.createModFolder();
-        installer.downloadMods();
+
+        if (!launcher.getModInstaller().backupModFolder()) {
+            logger.error("Error while backing up mod folder.");
+            System.exit(-1);
+            return;
+        }
+        launcher.getModInstaller().createModFolder();
+        launcher.getModInstaller().downloadMods();
 
         if (shouldInstallForge()) {
-            installer.installForge();
+            launcher.getForgeInstaller().setup();
+            launcher.getForgeInstaller().download();
+            launcher.getForgeInstaller().install();
+            launcher.getForgeInstaller().cleanUp();
         }
 
-        installer.stop();
+        launcher.exit();
         logger.info("Installation finished.");
     }
 
