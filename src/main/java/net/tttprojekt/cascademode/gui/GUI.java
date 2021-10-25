@@ -22,11 +22,14 @@ public class GUI {
     private GridBagConstraints bagConstraints;
 
     private JPanel checkBoxPanel;
+    private JPanel labelPanel;
     private JPanel buttonPanel;
 
     private JCheckBox checkBoxCreateBackup;
     private JCheckBox checkBoxDownloadOptiFine;
     private JCheckBox checkBoxDownloadJustEnoughItems;
+
+    private JLabel labelDownload;
 
     private JButton buttonDownloadMods;
     private JButton buttonDownloadForge;
@@ -77,7 +80,9 @@ public class GUI {
 
     private void createComponents() {
         createCheckBoxes();
+        createDownloadLabel();
         createButtons();
+        this.labelPanel.setVisible(false);
     }
 
     private void createCheckBoxes() {
@@ -87,7 +92,7 @@ public class GUI {
 
         this.bagConstraints.gridx = 0;
         this.bagConstraints.gridy = 0;
-        this.bagConstraints.insets = new Insets(20, 50, 20, 50);
+        this.bagConstraints.insets = new Insets(25, 50, 20, 50);
         this.bagConstraints.weightx = 1;
 
         this.mainFrame.add(this.checkBoxPanel, this.bagConstraints);
@@ -115,14 +120,32 @@ public class GUI {
         this.checkBoxPanel.add(this.checkBoxDownloadJustEnoughItems);
     }
 
+    private void createDownloadLabel() {
+        this.labelPanel = new JPanel();
+        this.labelPanel.setLayout(new BoxLayout(this.labelPanel, BoxLayout.Y_AXIS));
+
+
+        this.bagConstraints.gridx = 0;
+        this.bagConstraints.gridy = 1;
+        this.bagConstraints.insets = new Insets(0, 50, 10, 50);
+        this.bagConstraints.weightx = 1;
+
+        this.mainFrame.add(this.labelPanel, this.bagConstraints);
+
+        this.labelDownload = new JLabel("Downloading...");
+        this.labelDownload.setForeground(new Color(159, 37, 37));
+
+        this.labelPanel.add(this.labelDownload);
+    }
+
     private void createButtons() {
         this.buttonPanel = new JPanel();
         this.buttonPanel.setLayout(new BoxLayout(this.buttonPanel, BoxLayout.X_AXIS));
 
         this.bagConstraints.gridx = 0;
-        this.bagConstraints.gridy = 1;
+        this.bagConstraints.gridy = 2;
         this.bagConstraints.ipady = 5;
-        this.bagConstraints.insets = new Insets(0, 50, 20, 50);
+        this.bagConstraints.insets = new Insets(0, 50, 25, 50);
         this.bagConstraints.weightx = 1;
 
         this.mainFrame.add(this.buttonPanel, this.bagConstraints);
@@ -157,6 +180,8 @@ public class GUI {
 
         this.buttonDownloadForge.setEnabled(enabled);
         this.buttonDownloadMods.setEnabled(enabled);
+
+        this.labelPanel.setVisible(!enabled);
     }
 
     private JCheckBox createCheckBox(String title, String tooltip, ItemListener itemListener) {
@@ -171,6 +196,7 @@ public class GUI {
     private void onButtonDownloadModsClicked() {
         if (this.modInstaller == null) return;
         toggleElements(false);
+        this.labelDownload.setText("Downloading mods...");
 
         SwingUtilities.invokeLater(() -> {
             this.modInstaller.backupModFolder();
@@ -186,13 +212,17 @@ public class GUI {
     private void onButtonDownloadForgeClicked() {
         if (this.forgeInstaller == null) return;
         toggleElements(false);
+        this.labelDownload.setText("Downloading forge...");
 
         SwingUtilities.invokeLater(() -> {
             this.forgeInstaller.setup();
             this.forgeInstaller.download(() -> {
-                this.forgeInstaller.install();
-                this.forgeInstaller.cleanUp();
-                toggleElements(true);
+                this.labelDownload.setText("Installing forge...");
+                SwingUtilities.invokeLater(() -> {
+                    this.forgeInstaller.install();
+                    this.forgeInstaller.cleanUp();
+                    toggleElements(true);
+                });
             });
         });
     }
