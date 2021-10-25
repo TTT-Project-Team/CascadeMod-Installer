@@ -4,6 +4,7 @@ import lombok.Setter;
 import net.tttprojekt.cascademode.Main;
 import net.tttprojekt.cascademode.installer.IForgeInstaller;
 import net.tttprojekt.cascademode.installer.IModInstaller;
+import net.tttprojekt.cascademode.utils.MinecraftChecker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -127,9 +128,15 @@ public class GUI {
         this.mainFrame.add(this.buttonPanel, this.bagConstraints);
 
         this.buttonDownloadMods = createButton("Download Mods", action -> {
+            if (checkMinecraftRunning()) {
+                return;
+            }
             onButtonDownloadModsClicked();
         });
         this.buttonDownloadForge = createButton("Download Forge", action -> {
+            if (checkMinecraftRunning()) {
+                return;
+            }
             onButtonDownloadForgeClicked();
         });
 
@@ -196,6 +203,14 @@ public class GUI {
         jButton.addActionListener(actionListener);
 
         return jButton;
+    }
+
+    private boolean checkMinecraftRunning() {
+        if (!MinecraftChecker.isMinecraftRunning()) return false;
+        JOptionPane.showMessageDialog(this.mainFrame, "Minecraft has been detected.\nPlease close it before starting a download.",
+                "Minecraft Detection",
+                JOptionPane.ERROR_MESSAGE);
+        return true;
     }
 
 }
