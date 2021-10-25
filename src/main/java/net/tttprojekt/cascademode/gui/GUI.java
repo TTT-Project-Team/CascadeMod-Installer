@@ -12,6 +12,7 @@ import java.awt.event.*;
 
 public class GUI {
 
+    private static final Font APPLICATION_FONT = new Font("Roboto", Font.PLAIN, 14);
     private final String title;
     private final int width;
     private final int height;
@@ -53,6 +54,8 @@ public class GUI {
         this.height = height;
         createFrame();
         createComponents();
+
+        changeFont(this.mainFrame);
 
         this.mainFrame.pack();
         this.mainFrame.setVisible(true);
@@ -241,6 +244,15 @@ public class GUI {
                 "Minecraft Detection",
                 JOptionPane.ERROR_MESSAGE);
         return true;
+    }
+
+    private void changeFont(Component component) {
+        component.setFont(APPLICATION_FONT);
+        if (component instanceof Container) {
+            for (Component child : ((Container) component).getComponents()) {
+                changeFont(child);
+            }
+        }
     }
 
 }
