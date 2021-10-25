@@ -166,9 +166,7 @@ public class GUI {
         toggleElements(false);
 
         SwingUtilities.invokeLater(() -> {
-            if (this.checkBoxCreateBackup.isSelected()) {
-                this.modInstaller.backupModFolder();
-            }
+            this.modInstaller.backupModFolder();
             this.modInstaller.createModFolder();
             this.modInstaller.downloadMods(() -> {
                 toggleElements(true);

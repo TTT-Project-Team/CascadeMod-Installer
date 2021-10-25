@@ -1,5 +1,6 @@
 package net.tttprojekt.cascademode.installer;
 
+import lombok.Getter;
 import lombok.Setter;
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
@@ -44,7 +45,7 @@ public class ModInstaller implements IModInstaller {
     private final DownloadTask modDownloadTask;
     private final DownloadTask jeiDownloadTask;
 
-    @Setter private boolean createBackup;
+    @Getter @Setter private boolean createBackup;
     @Setter private boolean downloadOptiFine;
     @Setter private boolean downloadJustEnoughItems;
 
@@ -59,8 +60,8 @@ public class ModInstaller implements IModInstaller {
     }
 
     @Override
-    public boolean backupModFolder() {
     public void backupModFolder() {
+        if (!createBackup) return;
         boolean emptyDirectory = true;
 
         File modFolder = new File(MODS_FOLDER);
