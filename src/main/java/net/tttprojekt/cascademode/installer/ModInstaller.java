@@ -60,6 +60,7 @@ public class ModInstaller implements IModInstaller {
 
     @Override
     public boolean backupModFolder() {
+    public void backupModFolder() {
         boolean emptyDirectory = true;
 
         File modFolder = new File(MODS_FOLDER);
@@ -76,11 +77,10 @@ public class ModInstaller implements IModInstaller {
             try {
                 FileUtils.copyDirectory(modFolder, modFolderBackup);
             } catch (IOException e) {
-                return false;
+                e.printStackTrace();
             }
             logger.info("Successfully backed up mod folder.");
         }
-        return true;
     }
 
     @Override
