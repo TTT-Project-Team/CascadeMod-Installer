@@ -31,7 +31,7 @@ public class OptiFineFetcher {
 
             URL downloadURL = htmlPage.getFullyQualifiedUrl(downloadAnchor.getHrefAttribute());
 
-            if(downloadURL == null) {
+            if (downloadURL == null) {
                 logger.error(String.format("Error fetching OptiFine download link for version %s. DownloadURL is null.", version));
                 return Optional.empty();
             }
