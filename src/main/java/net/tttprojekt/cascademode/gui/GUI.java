@@ -240,7 +240,9 @@ public class GUI {
 
     private boolean checkMinecraftRunning() {
         if (!MinecraftChecker.isMinecraftRunning()) return false;
-        JOptionPane.showMessageDialog(this.mainFrame, "Minecraft has been detected.\nPlease close it before starting a download.",
+        JLabel messageLabel = new JLabel("<html>Minecraft has been detected.<br/>Please close it before starting a download.</html>");
+        messageLabel.setFont(new Font(APPLICATION_FONT.getName(), Font.PLAIN, APPLICATION_FONT.getSize() - 1));
+        JOptionPane.showMessageDialog(this.mainFrame, messageLabel,
                 "Minecraft Detection",
                 JOptionPane.ERROR_MESSAGE);
         return true;
