@@ -21,6 +21,7 @@ dependencies {
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.14.1'
     implementation 'commons-io:commons-io:2.11.0'
+    implementation 'net.sourceforge.htmlunit:htmlunit:2.54.0'
 
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
