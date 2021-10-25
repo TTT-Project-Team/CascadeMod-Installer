@@ -13,15 +13,30 @@ import java.awt.event.*;
 public class GUI {
 
     private static final Font APPLICATION_FONT = new Font("Roboto", Font.PLAIN, 14);
+    private static final ImageIcon ICON_IMAGE;
+    private static final ImageIcon BANNER_IMAGE;
+
+    static {
+        ICON_IMAGE = new ImageIcon(Main.class.getClassLoader().getResource("installer-icon.png"));
+        ImageIcon rawBanner = new ImageIcon(Main.class.getClassLoader().getResource("tttproject-banner.png"));
+
+        Image image = rawBanner.getImage();
+        float scale = 0.06f;
+        int newWidth = (int) (rawBanner.getIconWidth() * scale);
+        int newHeight = (int) (rawBanner.getIconHeight() * scale);
+        BANNER_IMAGE = new ImageIcon(image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
+
+    }
+
     private final String title;
     private final int width;
     private final int height;
 
-    private final ImageIcon imageIcon;
 
     private JFrame mainFrame;
     private GridBagConstraints bagConstraints;
 
+    private JPanel logoBannerPanel;
     private JPanel checkBoxPanel;
     private JPanel labelPanel;
     private JPanel buttonPanel;
@@ -46,7 +61,6 @@ public class GUI {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        this.imageIcon = new ImageIcon(Main.class.getClassLoader().getResource("installer-icon.png"));
         this.windowClose = windowClose;
 
         this.title = title;
@@ -67,7 +81,7 @@ public class GUI {
         this.mainFrame.setResizable(false);
         this.mainFrame.setLocationRelativeTo(null);
         this.mainFrame.setLayout(new GridBagLayout());
-        this.mainFrame.setIconImage(this.imageIcon.getImage());
+        this.mainFrame.setIconImage(this.ICON_IMAGE.getImage());
 
         this.mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -82,10 +96,28 @@ public class GUI {
     }
 
     private void createComponents() {
+        createLogoBanner();
         createCheckBoxes();
         createDownloadLabel();
         createButtons();
-        this.labelPanel.setVisible(false);
+    }
+
+    private void createLogoBanner() {
+
+        this.logoBannerPanel = new JPanel();
+        this.logoBannerPanel.setLayout(new BoxLayout(this.logoBannerPanel, BoxLayout.Y_AXIS));
+
+
+        this.bagConstraints.gridx = 0;
+        this.bagConstraints.gridy = 0;
+        this.bagConstraints.insets = new Insets(0, 50, 0, 50);
+        this.bagConstraints.weightx = 1;
+
+        this.mainFrame.add(this.logoBannerPanel, this.bagConstraints);
+
+        JLabel logoBanner = new JLabel(BANNER_IMAGE);
+
+        this.logoBannerPanel.add(logoBanner);
     }
 
     private void createCheckBoxes() {
@@ -94,8 +126,8 @@ public class GUI {
 
 
         this.bagConstraints.gridx = 0;
-        this.bagConstraints.gridy = 0;
-        this.bagConstraints.insets = new Insets(25, 50, 20, 50);
+        this.bagConstraints.gridy = 1;
+        this.bagConstraints.insets = new Insets(0, 50, 20, 50);
         this.bagConstraints.weightx = 1;
 
         this.mainFrame.add(this.checkBoxPanel, this.bagConstraints);
@@ -129,7 +161,7 @@ public class GUI {
 
 
         this.bagConstraints.gridx = 0;
-        this.bagConstraints.gridy = 1;
+        this.bagConstraints.gridy = 2;
         this.bagConstraints.insets = new Insets(0, 50, 10, 50);
         this.bagConstraints.weightx = 1;
 
@@ -139,6 +171,7 @@ public class GUI {
         this.labelDownload.setForeground(new Color(159, 37, 37));
 
         this.labelPanel.add(this.labelDownload);
+        this.labelPanel.setVisible(false);
     }
 
     private void createButtons() {
@@ -146,7 +179,7 @@ public class GUI {
         this.buttonPanel.setLayout(new BoxLayout(this.buttonPanel, BoxLayout.X_AXIS));
 
         this.bagConstraints.gridx = 0;
-        this.bagConstraints.gridy = 2;
+        this.bagConstraints.gridy = 3;
         this.bagConstraints.ipady = 5;
         this.bagConstraints.insets = new Insets(0, 50, 25, 50);
         this.bagConstraints.weightx = 1;
