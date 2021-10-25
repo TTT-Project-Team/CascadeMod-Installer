@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.SneakyThrows;
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
+import net.tttprojekt.cascademode.utils.ProcessUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,22 +60,15 @@ public class ForgeInstaller implements IForgeInstaller {
 
     @Override
     public void install() {
-        ProcessBuilder pb = new ProcessBuilder("java", "-jar", FORGE_INSTALLER_FILE);
-        pb.directory(new File(FORGE_INSTALL_FOLDER_PATH));
-        try {
-            Process process = pb.start();
-            process.waitFor();
-            List<String> forgeInput = getForgeInput(process.getInputStream());
+        Process process = ProcessUtils.getProcess(new File(FORGE_INSTALL_FOLDER_PATH), "java", "-jar", FORGE_INSTALLER_FILE);
+        List<String> processInput = ProcessUtils.getProcessInput(process);
 
-            if (forgeInput.stream().anyMatch(s -> s.equalsIgnoreCase("Finished!"))) {
-                logger.info("Forge was successfully installed.");
-            } else {
-                logger.error("An error occurred during the installation of forge.");
-            }
-
-        } catch (Exception e) {
-            logger.error("Error while installing forge.", e);
+        if (processInput.stream().anyMatch(s -> s.equalsIgnoreCase("Finished!"))) {
+            logger.info("Forge was successfully installed.");
+        } else {
+            logger.error("An error occurred during the installation of forge.");
         }
+
     }
 
     @Override

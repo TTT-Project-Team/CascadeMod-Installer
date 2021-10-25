@@ -1,8 +1,11 @@
 package net.tttprojekt.cascademode.installer;
 
+import lombok.Getter;
 import lombok.Setter;
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
+import net.tttprojekt.cascademode.utils.OptiFineFetcher;
+import net.tttprojekt.cascademode.utils.OptiFineVersion;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.SplittableRandom;
 
 
@@ -18,7 +22,6 @@ public class ModInstaller implements IModInstaller {
     private static final Logger logger = LoggerFactory.getLogger(ModInstaller.class);
 
     private static final String MOD_DOWNLOAD_URL = "https://github.com/xNoci/CascadeMod-Installer/blob/dev/modfile/Cascade%20Mod.jar?raw=true";
-    private static final String OPTIFINE_DOWNLOAD_URL = "https://optifine.net/downloadx?f=OptiFine_1.12.2_HD_U_G5.jar&x=95dd0de8fe2ef755e347876857646d28";
     private static final String JEI_DOWNLOAD_URL = "https://media.forgecdn.net/files/3040/523/jei_1.12.2-4.16.1.301.jar";
 
     private static final String MODS_FOLDER = getModDir().getAbsolutePath();
@@ -40,10 +43,9 @@ public class ModInstaller implements IModInstaller {
 
     private final DownloadTaskManager downloadTaskManager;
     private final DownloadTask modDownloadTask;
-    private final DownloadTask optiFineDownloadTask;
     private final DownloadTask jeiDownloadTask;
 
-    @Setter private boolean createBackup;
+    @Getter @Setter private boolean createBackup;
     @Setter private boolean downloadOptiFine;
     @Setter private boolean downloadJustEnoughItems;
 
@@ -52,14 +54,14 @@ public class ModInstaller implements IModInstaller {
         this.downloadTaskManager = downloadTaskManager;
 
         this.modDownloadTask = downloadTaskManager.createTask(MOD_DOWNLOAD_URL, FILE_DESTINATION_MOD);
-        this.optiFineDownloadTask = downloadTaskManager.createTask(OPTIFINE_DOWNLOAD_URL, FILE_DESTINATION_OPTIFINE);
         this.jeiDownloadTask = downloadTaskManager.createTask(JEI_DOWNLOAD_URL, FILE_DESTINATION_JEI);
         logger.info("Download tasks created.");
 
     }
 
     @Override
-    public boolean backupModFolder() {
+    public void backupModFolder() {
+        if (!createBackup) return;
         boolean emptyDirectory = true;
 
         File modFolder = new File(MODS_FOLDER);
@@ -76,11 +78,10 @@ public class ModInstaller implements IModInstaller {
             try {
                 FileUtils.copyDirectory(modFolder, modFolderBackup);
             } catch (IOException e) {
-                return false;
+                e.printStackTrace();
             }
             logger.info("Successfully backed up mod folder.");
         }
-        return true;
     }
 
     @Override
@@ -108,24 +109,39 @@ public class ModInstaller implements IModInstaller {
 
     @Override
     public void downloadMods(Runnable downloadRunnable) {
-        downloadTaskManager.startAsyncTask(modDownloadTask);
-        if (downloadOptiFine)
-            downloadTaskManager.startAsyncTask(optiFineDownloadTask);
-        if (downloadJustEnoughItems)
-            downloadTaskManager.startAsyncTask(jeiDownloadTask);
+        logger.info("Download mods...");
+
+        this.downloadTaskManager.startAsyncTask(this.modDownloadTask);
+        if (this.downloadOptiFine) {
+            DownloadTask ofDownloadTask = getOptiFineDownloadTask();
+            if (ofDownloadTask != null)
+                this.downloadTaskManager.startAsyncTask(ofDownloadTask);
+        }
+        if (this.downloadJustEnoughItems)
+            this.downloadTaskManager.startAsyncTask(this.jeiDownloadTask);
 
         this.downloadTaskManager.waitForDownloads();
         downloadRunnable.run();
+        logger.info("Mods downloaded successfully.");
+    }
+
+    private DownloadTask getOptiFineDownloadTask() {
+        Optional<String> ofURLOptional = OptiFineFetcher.fetchLink(OptiFineVersion.V_1_12_2_HD_U_G5);
+        if (!ofURLOptional.isPresent()) {
+            logger.error("The OptiFine download link could not be retrieved.");
+            return null;
+        }
+        return this.downloadTaskManager.createTask(ofURLOptional.get(), FILE_DESTINATION_OPTIFINE);
     }
 
     private String getRandomHexString(int numchars) {
         SplittableRandom r = new SplittableRandom();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (sb.length() < numchars) {
             sb.append(Integer.toHexString(r.nextInt()));
         }
 
-        return sb.toString().substring(0, numchars);
+        return sb.substring(0, numchars);
     }
 
 }

@@ -2,7 +2,7 @@ package net.tttprojekt.cascademode.installer;
 
 public interface IModInstaller {
 
-    boolean backupModFolder();
+    void backupModFolder();
 
     void createModFolder();
 
