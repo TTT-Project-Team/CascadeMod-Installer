@@ -2,6 +2,7 @@ package net.tttprojekt.cascademode.installer;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
 import net.tttprojekt.cascademode.utils.OptiFineFetcher;
@@ -59,29 +60,24 @@ public class ModInstaller implements IModInstaller {
 
     }
 
+    @SneakyThrows
     @Override
     public void backupModFolder() {
         if (!createBackup) return;
-        boolean emptyDirectory = true;
 
         File modFolder = new File(MODS_FOLDER);
+        if (!modFolder.exists()) return;
+        if (FileUtils.isEmptyDirectory(modFolder)) return;
+
+        String backupFolderName = String.format("%s - tttmp-installer backup [%s]", MODS_FOLDER, getRandomHexString(8));
+        File modFolderBackup = new File(backupFolderName);
+        logger.info(String.format("Backing up mod folder to '%s'...", modFolderBackup.getPath()));
         try {
-            emptyDirectory = FileUtils.isEmptyDirectory(modFolder);
+            FileUtils.copyDirectory(modFolder, modFolderBackup);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        if (modFolder.exists() && !emptyDirectory) {
-            String backupFolderName = String.format("%s - tttmp-installer backup [%s]", MODS_FOLDER, getRandomHexString(8));
-            File modFolderBackup = new File(backupFolderName);
-            logger.info(String.format("Backing up mod folder to '%s'...", modFolderBackup.getPath()));
-            try {
-                FileUtils.copyDirectory(modFolder, modFolderBackup);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            logger.info("Successfully backed up mod folder.");
-        }
+        logger.info("Successfully backed up mod folder.");
     }
 
     @Override
