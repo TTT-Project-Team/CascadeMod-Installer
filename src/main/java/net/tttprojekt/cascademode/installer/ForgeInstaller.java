@@ -47,16 +47,17 @@ public class ForgeInstaller implements IForgeInstaller {
     }
 
     @Override
-    public void install() {
+    public boolean install() {
         Process process = ProcessUtils.getProcess(new File(FileDestination.getForgeFolderPath()), "java", "-jar", FileDestination.getForgeInstallerFile());
         List<String> processInput = ProcessUtils.getProcessInput(process);
 
         if (processInput.stream().anyMatch(s -> s.equalsIgnoreCase("Finished!"))) {
             logger.info("Forge was successfully installed.");
+            return true;
         } else {
             logger.error("An error occurred during the installation of forge.");
+            return false;
         }
-
     }
 
     @Override
