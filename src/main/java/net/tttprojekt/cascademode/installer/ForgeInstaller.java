@@ -1,7 +1,5 @@
 package net.tttprojekt.cascademode.installer;
 
-import com.google.common.collect.Lists;
-import lombok.SneakyThrows;
 import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
 import net.tttprojekt.cascademode.utils.ProcessUtils;
@@ -9,7 +7,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -80,20 +79,6 @@ public class ForgeInstaller implements IForgeInstaller {
         } catch (IOException e) {
             logger.error("Error while cleaning up forge installation.", e);
         }
-    }
-
-    @SneakyThrows
-    private static List<String> getForgeInput(InputStream inputStream) {
-        List<String> input = Lists.newArrayList();
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        while ((line = in.readLine()) != null) {
-            input.add(line);
-        }
-
-        in.close();
-        return input;
     }
 
 }
