@@ -36,7 +36,7 @@ public class Launcher {
     }
 
     public void exit() {
-        this.downloadTaskManager.stop();
+        this.downloadTaskManager.cleanUp();
     }
 
     private void createWindow() {

@@ -4,7 +4,7 @@ public interface IForgeInstaller {
 
     void setup();
 
-    void download(Runnable runnable);
+    void download();
 
     boolean install();
 

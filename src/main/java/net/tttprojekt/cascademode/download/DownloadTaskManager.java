@@ -1,13 +1,11 @@
 package net.tttprojekt.cascademode.download;
 
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -55,7 +53,7 @@ public class DownloadTaskManager {
         }
     }
 
-    public void stop() {
+    public void cleanUp() {
         executorService.shutdown();
         try {
             if (!executorService.awaitTermination(500, TimeUnit.MILLISECONDS)) {

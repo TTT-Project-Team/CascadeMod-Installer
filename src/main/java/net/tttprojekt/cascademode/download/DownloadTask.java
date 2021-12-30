@@ -29,7 +29,7 @@ public class DownloadTask {
     }
 
 
-    public void isURLValid() throws IOException {
+    private void isURLValid() throws IOException {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(this.downloadURL).openConnection();
             connection.setRequestMethod("HEAD");
@@ -61,7 +61,7 @@ public class DownloadTask {
         return this.downloading.get();
     }
 
-    public void setDownloading(boolean downloading) {
+    protected void setDownloading(boolean downloading) {
         this.downloading.set(downloading);
     }
 

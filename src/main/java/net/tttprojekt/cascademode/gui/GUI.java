@@ -276,17 +276,17 @@ public class GUI {
 
         SwingUtilities.invokeLater(() -> {
             this.forgeInstaller.setup();
-            this.forgeInstaller.download(() -> {
-                setStatusLabel("Installing forge...", LabelStatus.WORKING);
-                SwingUtilities.invokeLater(() -> {
-                    if (this.forgeInstaller.install()) {
-                        setStatusLabel("Successfully installed forge.", LabelStatus.SUCCESS);
-                    } else {
-                        setStatusLabel("Failed to install forge.", LabelStatus.FAIL);
-                    }
-                    this.forgeInstaller.cleanUp();
-                    toggleElements(true);
-                });
+            this.forgeInstaller.download();
+
+            setStatusLabel("Installing forge...", LabelStatus.WORKING);
+            SwingUtilities.invokeLater(() -> {
+                if (this.forgeInstaller.install()) {
+                    setStatusLabel("Successfully installed forge.", LabelStatus.SUCCESS);
+                } else {
+                    setStatusLabel("Failed to install forge.", LabelStatus.FAIL);
+                }
+                this.forgeInstaller.cleanUp();
+                toggleElements(true);
             });
         });
     }
