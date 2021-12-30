@@ -24,29 +24,40 @@ public class Launcher {
 
     public Launcher() {
         logger.info("Creating launcher...");
+        createWindow();
+
         this.downloadTaskManager = new DownloadTaskManager();
         this.modInstaller = new ModInstaller(this.downloadTaskManager);
         this.forgeInstaller = new ForgeInstaller(this.downloadTaskManager);
+
+        instantiateWindow();
         logger.info("Launcher created.");
-
-        float aspectRatio = (float) 9 / 16;
-        int height = 400;
-        int width = (int) (height * aspectRatio);
-
-        SwingUtilities.invokeLater(() -> {
-            Launcher.this.gui = new GUI("CascadeMod-Installer", width, height, () -> {
-                this.exit();
-                logger.info("Successfully closed installer.");
-            });
-            Launcher.this.gui.setModInstaller(this.modInstaller);
-            Launcher.this.gui.setForgeInstaller(this.forgeInstaller);
-            Launcher.this.gui.updateCheckBox();
-        });
-
 
     }
 
     public void exit() {
         this.downloadTaskManager.stop();
+    }
+
+    private void createWindow() {
+        SwingUtilities.invokeLater(() -> {
+            float aspectRatio = (float) 9 / 16;
+            int height = 400;
+            int width = (int) (height * aspectRatio);
+
+            Launcher.this.gui = new GUI("CascadeMod-Installer", width, height, () -> {
+                this.exit();
+                logger.info("Successfully closed installer.");
+            });
+
+            Launcher.this.gui.loading(true);
+        });
+    }
+
+    private void instantiateWindow() {
+        this.gui.setModInstaller(this.modInstaller);
+        this.gui.setForgeInstaller(this.forgeInstaller);
+        this.gui.updateCheckBox();
+        Launcher.this.gui.loading(false);
     }
 }

@@ -220,6 +220,19 @@ public class GUI {
         this.labelPanel.setVisible(!enabled);
     }
 
+    public void loading(boolean loading) {
+        this.checkBoxCreateBackup.setVisible(!loading);
+        this.checkBoxDownloadOptiFine.setVisible(!loading);
+        this.checkBoxDownloadJustEnoughItems.setVisible(!loading);
+
+        this.buttonDownloadForge.setVisible(!loading);
+        this.buttonDownloadMods.setVisible(!loading);
+
+        this.labelPanel.setVisible(loading);
+        this.labelDownload.setText("Loading downloader...");
+
+    }
+
     private JCheckBox createCheckBox(String title, String tooltip, ItemListener itemListener) {
         JCheckBox checkBox = new JCheckBox(title);
         checkBox.setToolTipText(tooltip);
