@@ -1,7 +1,7 @@
 package net.tttprojekt.cascademode.installer;
 
-import net.tttprojekt.cascademode.download.DownloadTaskManager;
 import net.tttprojekt.cascademode.download.Download;
+import net.tttprojekt.cascademode.download.DownloadTaskManager;
 import net.tttprojekt.cascademode.utils.FileDestination;
 import net.tttprojekt.cascademode.utils.ProcessUtils;
 import org.apache.commons.io.FileUtils;
@@ -42,7 +42,7 @@ public class ForgeInstaller implements IForgeInstaller {
 
     @Override
     public void download(Runnable runnable) {
-        this.downloadTaskManager.submit(Download.FORGE);
+        this.downloadTaskManager.submitAndWait(Download.FORGE);
         runnable.run();
     }
 

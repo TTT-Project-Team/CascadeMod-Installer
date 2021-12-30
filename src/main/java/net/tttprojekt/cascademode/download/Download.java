@@ -25,4 +25,7 @@ public enum Download {
         return this.downloadTask;
     }
 
+    boolean isDownloading() {
+        return get().isDownloading();
+    }
 }

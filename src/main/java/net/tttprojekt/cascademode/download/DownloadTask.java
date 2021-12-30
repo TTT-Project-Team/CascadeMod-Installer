@@ -57,10 +57,6 @@ public class DownloadTask {
         logger.info(String.format(" >> File Location: %s", this.fileDestination));
     }
 
-    protected void block() {
-        while (isDownloading()) ;
-    }
-
     public boolean isDownloading() {
         return this.downloading.get();
     }

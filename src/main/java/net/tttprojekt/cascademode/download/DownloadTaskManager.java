@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,7 +17,6 @@ public class DownloadTaskManager {
     private static final Logger logger = LoggerFactory.getLogger(DownloadTaskManager.class);
     private final ExecutorService executorService;
 
-    private final List<Download> runningTasks = Lists.newArrayList();
 
     public DownloadTaskManager() {
         executorService = Executors.newCachedThreadPool((new ThreadFactoryBuilder()).setNameFormat("DownloadManager").build());
@@ -26,8 +26,7 @@ public class DownloadTaskManager {
 
     public void waitForDownloads() {
         while (true) {
-            List<Download> list = Lists.newArrayList(this.runningTasks);
-            if (list.stream().noneMatch(downloads -> downloads.get().isDownloading())) break;
+            if (Arrays.stream(Download.values()).noneMatch(Download::isDownloading)) break;
         }
     }
 
@@ -39,9 +38,7 @@ public class DownloadTaskManager {
         task.get().setDownloading(true);
         this.executorService.submit(() -> {
             try {
-                runningTasks.add(task);
                 task.get().download();
-                removeTask(task);
                 task.get().setDownloading(false);
             } catch (IOException e) {
                 logger.error("An unexpected error occurred in a download task.", e);
@@ -49,10 +46,10 @@ public class DownloadTaskManager {
         });
     }
 
-    public void submit(Download task) {
+    public void submitAndWait(Download task) {
         try {
             task.get().download();
-            task.get().block();
+            waitForDownloads();
         } catch (IOException e) {
             logger.error("An unexpected error occurred in a download task.", e);
         }
@@ -70,7 +67,4 @@ public class DownloadTaskManager {
         }
     }
 
-    protected void removeTask(Download download) {
-        this.runningTasks.remove(download);
-    }
 }
