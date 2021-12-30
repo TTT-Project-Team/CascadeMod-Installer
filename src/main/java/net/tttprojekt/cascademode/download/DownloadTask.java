@@ -19,16 +19,17 @@ public class DownloadTask {
 
     private AtomicBoolean downloading = new AtomicBoolean();
 
-    private final DownloadTaskManager downloadTaskManager;
+    public static DownloadTask of(String url, String destination) {
+        return new DownloadTask(url, destination);
+    }
 
-    protected DownloadTask(String url, String destination, DownloadTaskManager downloadTaskManager) {
+    protected DownloadTask(String url, String destination) {
         this.downloadURL = url;
         this.fileDestination = destination;
-        this.downloadTaskManager = downloadTaskManager;
     }
 
 
-    public void isURLValid() throws IOException {
+    private void isURLValid() throws IOException {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(this.downloadURL).openConnection();
             connection.setRequestMethod("HEAD");
@@ -39,6 +40,7 @@ public class DownloadTask {
             }
 
         } catch (IOException e) {
+            setDownloading(false);
             if (e.getMessage().toLowerCase().contains("response")) throw e;
             throw new IOException(String.format("Cannot download file. Could not connect to URL: %s", this.downloadURL));
         }
@@ -47,28 +49,20 @@ public class DownloadTask {
 
     protected void download() throws IOException {
         isURLValid();
-        if (isDownloading())
-            throw new IllegalStateException("Could not download file. Download is currently running");
 
-        this.downloading.set(true);
-
-        this.downloadTaskManager.getExecutorService().submit(() -> {
-            logger.info(String.format("Start downloading file from '%s'...", this.downloadURL));
-            downloadFile();
-            logger.info("Successfully downloaded file.");
-            logger.info(String.format(" >> Downloaded from URL: %s", this.downloadURL));
-            logger.info(String.format(" >> File Location: %s", this.fileDestination));
-            this.downloading.set(false);
-            this.downloadTaskManager.removeTask(this);
-        });
-    }
-
-    protected void block() {
-        while (isDownloading()) ;
+        logger.info(String.format("Start downloading file from '%s'...", this.downloadURL));
+        downloadFile();
+        logger.info("Successfully downloaded file.");
+        logger.info(String.format(" >> Downloaded from URL: %s", this.downloadURL));
+        logger.info(String.format(" >> File Location: %s", this.fileDestination));
     }
 
     public boolean isDownloading() {
         return this.downloading.get();
+    }
+
+    protected void setDownloading(boolean downloading) {
+        this.downloading.set(downloading);
     }
 
     private void downloadFile() {
