@@ -1,7 +1,8 @@
 package net.tttprojekt.cascademode.installer;
 
-import net.tttprojekt.cascademode.download.DownloadTask;
 import net.tttprojekt.cascademode.download.DownloadTaskManager;
+import net.tttprojekt.cascademode.download.Download;
+import net.tttprojekt.cascademode.utils.FileDestination;
 import net.tttprojekt.cascademode.utils.ProcessUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -9,35 +10,23 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class ForgeInstaller implements IForgeInstaller {
 
     private static final Logger logger = LoggerFactory.getLogger(ForgeInstaller.class);
-    private static final String FORGE_INSTALLER_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.12.2-14.23.5.2855/forge-1.12.2-14.23.5.2855-installer.jar";
-    private static final String FORGE_INSTALL_FOLDER_PATH = getForgeInstallFolderPath().getAbsolutePath();
-    private static final String FORGE_INSTALLER_FILE = FORGE_INSTALL_FOLDER_PATH + "/forge-1.12.2-14.23.5.2855-installer.jar";
 
     private final DownloadTaskManager downloadTaskManager;
-    private final DownloadTask forgeInstallerDownloadTask;
 
     public ForgeInstaller(DownloadTaskManager downloadTaskManager) {
         logger.info("Initialising forge installer...");
         this.downloadTaskManager = downloadTaskManager;
-        this.forgeInstallerDownloadTask = downloadTaskManager.createTask(FORGE_INSTALLER_URL, FORGE_INSTALLER_FILE);
         logger.info("Forge installer initialised.");
-    }
-
-    private static File getForgeInstallFolderPath() {
-        String path = Paths.get("").toAbsolutePath().normalize().toString();
-        path += "/forgeInstaller";
-        return new File(path);
     }
 
     @Override
     public void setup() {
-        File forgeInstallFolder = new File(FORGE_INSTALL_FOLDER_PATH);
+        File forgeInstallFolder = new File(FileDestination.getForgeFolderPath());
         logger.info("Creating installation folder...");
         if (forgeInstallFolder.exists()) {
             try {
@@ -53,13 +42,13 @@ public class ForgeInstaller implements IForgeInstaller {
 
     @Override
     public void download(Runnable runnable) {
-        this.downloadTaskManager.startTask(this.forgeInstallerDownloadTask);
+        this.downloadTaskManager.submit(Download.FORGE);
         runnable.run();
     }
 
     @Override
     public void install() {
-        Process process = ProcessUtils.getProcess(new File(FORGE_INSTALL_FOLDER_PATH), "java", "-jar", FORGE_INSTALLER_FILE);
+        Process process = ProcessUtils.getProcess(new File(FileDestination.getForgeFolderPath()), "java", "-jar", FileDestination.getForgeInstallerFile());
         List<String> processInput = ProcessUtils.getProcessInput(process);
 
         if (processInput.stream().anyMatch(s -> s.equalsIgnoreCase("Finished!"))) {
@@ -74,7 +63,7 @@ public class ForgeInstaller implements IForgeInstaller {
     public void cleanUp() {
         logger.info("Cleaning up forge installation...");
         try {
-            FileUtils.deleteDirectory(new File(FORGE_INSTALL_FOLDER_PATH));
+            FileUtils.deleteDirectory(new File(FileDestination.getForgeFolderPath()));
             logger.info("The forge installation was successfully cleaned up.");
         } catch (IOException e) {
             logger.error("Error while cleaning up forge installation.", e);

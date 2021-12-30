@@ -16,39 +16,43 @@ public class DownloadTaskManager {
     private static final Logger logger = LoggerFactory.getLogger(DownloadTaskManager.class);
     private final ExecutorService executorService;
 
-    private final List<DownloadTask> runningTasks = Lists.newArrayList();
+    private final List<Download> runningTasks = Lists.newArrayList();
 
     public DownloadTaskManager() {
         executorService = Executors.newCachedThreadPool((new ThreadFactoryBuilder()).setNameFormat("DownloadManager").build());
-    }
-
-    public DownloadTask createTask(String url, String fileDestination) {
-        logger.info("Creating new download task");
-        logger.info(String.format(" >> Download url: %s ", url));
-        logger.info(String.format(" >> File location: %s ", fileDestination));
-        return new DownloadTask(url, fileDestination, this);
+        int downloads = Download.values().length;
+        logger.info(String.format("Found %s different downloads.", downloads));
     }
 
     public void waitForDownloads() {
         while (true) {
-            List<DownloadTask> list = Lists.newArrayList(this.runningTasks);
-            if (list.stream().noneMatch(DownloadTask::isDownloading)) break;
+            List<Download> list = Lists.newArrayList(this.runningTasks);
+            if (list.stream().noneMatch(downloads -> downloads.get().isDownloading())) break;
         }
     }
 
-    public void startAsyncTask(DownloadTask task) {
-        try {
-            task.download();
-            runningTasks.add(task);
-        } catch (IOException e) {
-            logger.error("An unexpected error occurred in a download task.", e);
+    public void submitAsync(Download task) {
+        if (task.get().isDownloading()) {
+            throw new IllegalStateException(String.format("Could not start download for %s. Download is currently running.", task.name()));
         }
+
+        task.get().setDownloading(true);
+        this.executorService.submit(() -> {
+            try {
+                runningTasks.add(task);
+                task.get().download();
+                removeTask(task);
+                task.get().setDownloading(false);
+            } catch (IOException e) {
+                logger.error("An unexpected error occurred in a download task.", e);
+            }
+        });
     }
 
-    public void startTask(DownloadTask task) {
+    public void submit(Download task) {
         try {
-            task.download();
-            task.block();
+            task.get().download();
+            task.get().block();
         } catch (IOException e) {
             logger.error("An unexpected error occurred in a download task.", e);
         }
@@ -66,11 +70,7 @@ public class DownloadTaskManager {
         }
     }
 
-    protected void removeTask(DownloadTask downloadTask) {
-        this.runningTasks.remove(downloadTask);
-    }
-
-    protected ExecutorService getExecutorService() {
-        return this.executorService;
+    protected void removeTask(Download download) {
+        this.runningTasks.remove(download);
     }
 }
