@@ -21,7 +21,7 @@ public class FileDestination {
         if (osType.contains("win") && System.getenv("APPDATA") != null)
             return new File(System.getenv("APPDATA"), mcDir);
         if (osType.contains("mac"))
-            return new File(new File(new File(userHomeDir, "Library"), "Application Support"), "minecraft");
+            return new File(new File(new File(new File(userHomeDir, "Library"), "Application Support"), "minecraft"), "mods");
         return new File(userHomeDir, mcDir);
     }
 
