@@ -1,4 +1,4 @@
-package net.tttprojekt.cascademode.utils;
+package net.tttprojekt.installer.utils;
 
 import com.google.common.collect.Lists;
 

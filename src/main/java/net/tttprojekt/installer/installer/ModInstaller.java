@@ -1,11 +1,11 @@
-package net.tttprojekt.cascademode.installer;
+package net.tttprojekt.installer.installer;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import net.tttprojekt.cascademode.download.DownloadTaskManager;
-import net.tttprojekt.cascademode.download.Download;
-import net.tttprojekt.cascademode.utils.FileDestination;
+import net.tttprojekt.installer.download.DownloadTaskManager;
+import net.tttprojekt.installer.download.Download;
+import net.tttprojekt.installer.utils.FileDestination;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

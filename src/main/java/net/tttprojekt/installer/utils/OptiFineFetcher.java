@@ -1,11 +1,11 @@
-package net.tttprojekt.cascademode.utils;
+package net.tttprojekt.installer.utils;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
-import net.tttprojekt.cascademode.download.DownloadTask;
+import net.tttprojekt.installer.download.DownloadTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

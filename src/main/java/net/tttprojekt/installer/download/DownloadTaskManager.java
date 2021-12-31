@@ -1,4 +1,4 @@
-package net.tttprojekt.cascademode.download;
+package net.tttprojekt.installer.download;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;

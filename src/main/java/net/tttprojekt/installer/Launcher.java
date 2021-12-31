@@ -1,12 +1,12 @@
-package net.tttprojekt.cascademode;
+package net.tttprojekt.installer;
 
 import lombok.Getter;
-import net.tttprojekt.cascademode.download.DownloadTaskManager;
-import net.tttprojekt.cascademode.gui.GUI;
-import net.tttprojekt.cascademode.installer.ForgeInstaller;
-import net.tttprojekt.cascademode.installer.IForgeInstaller;
-import net.tttprojekt.cascademode.installer.IModInstaller;
-import net.tttprojekt.cascademode.installer.ModInstaller;
+import net.tttprojekt.installer.download.DownloadTaskManager;
+import net.tttprojekt.installer.gui.GUI;
+import net.tttprojekt.installer.installer.ForgeInstaller;
+import net.tttprojekt.installer.installer.IForgeInstaller;
+import net.tttprojekt.installer.installer.IModInstaller;
+import net.tttprojekt.installer.installer.ModInstaller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

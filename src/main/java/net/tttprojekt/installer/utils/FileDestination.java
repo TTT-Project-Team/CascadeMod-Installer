@@ -1,4 +1,4 @@
-package net.tttprojekt.cascademode.utils;
+package net.tttprojekt.installer.utils;
 
 import java.io.File;
 import java.nio.file.Paths;

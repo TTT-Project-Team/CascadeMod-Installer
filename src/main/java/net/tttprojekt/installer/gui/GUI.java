@@ -1,11 +1,11 @@
-package net.tttprojekt.cascademode.gui;
+package net.tttprojekt.installer.gui;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.tttprojekt.cascademode.Main;
-import net.tttprojekt.cascademode.installer.IForgeInstaller;
-import net.tttprojekt.cascademode.installer.IModInstaller;
-import net.tttprojekt.cascademode.utils.MinecraftChecker;
+import net.tttprojekt.installer.Main;
+import net.tttprojekt.installer.installer.IForgeInstaller;
+import net.tttprojekt.installer.installer.IModInstaller;
+import net.tttprojekt.installer.utils.MinecraftChecker;
 
 import javax.swing.*;
 import java.awt.*;
