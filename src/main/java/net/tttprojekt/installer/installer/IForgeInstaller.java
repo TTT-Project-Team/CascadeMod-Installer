@@ -1,4 +1,4 @@
-package net.tttprojekt.cascademode.installer;
+package net.tttprojekt.installer.installer;
 
 public interface IForgeInstaller {
 

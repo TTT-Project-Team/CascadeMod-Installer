@@ -3,7 +3,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
-def mainClass = "net.tttprojekt.cascademode.Main"
+def mainClass = "net.tttprojekt.installer.Main"
 tasks.build.dependsOn tasks.shadowJar
 
 group 'net.tttprojekt'

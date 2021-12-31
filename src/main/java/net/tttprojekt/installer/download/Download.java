@@ -1,8 +1,8 @@
-package net.tttprojekt.cascademode.download;
+package net.tttprojekt.installer.download;
 
-import net.tttprojekt.cascademode.utils.FileDestination;
-import net.tttprojekt.cascademode.utils.OptiFineFetcher;
-import net.tttprojekt.cascademode.utils.OptiFineVersion;
+import net.tttprojekt.installer.utils.FileDestination;
+import net.tttprojekt.installer.utils.OptiFineFetcher;
+import net.tttprojekt.installer.utils.OptiFineVersion;
 
 public enum Download {
 
