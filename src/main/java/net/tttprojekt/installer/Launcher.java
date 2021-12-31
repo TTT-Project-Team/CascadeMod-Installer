@@ -37,6 +37,7 @@ public class Launcher {
 
     public void exit() {
         this.downloadTaskManager.cleanUp();
+        this.forgeInstaller.cleanUp();
     }
 
     private void createWindow() {
