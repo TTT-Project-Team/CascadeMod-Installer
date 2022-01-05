@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         printInformation();
         logger.info("Starting application...");
-        new Launcher();
+        new Application();
         logger.info("Application started.");
 
     }

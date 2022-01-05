@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
-public class Launcher {
+public class Application {
 
-    private static final Logger logger = LoggerFactory.getLogger(Launcher.class);
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     private final DownloadTaskManager downloadTaskManager;
     @Getter private final IModInstaller modInstaller;
@@ -22,8 +22,8 @@ public class Launcher {
 
     private GUI gui;
 
-    public Launcher() {
-        logger.info("Creating launcher...");
+    public Application() {
+        logger.info("Creating application...");
         createWindow();
 
         this.downloadTaskManager = new DownloadTaskManager();
@@ -31,11 +31,12 @@ public class Launcher {
         this.forgeInstaller = new ForgeInstaller(this.downloadTaskManager);
 
         instantiateWindow();
-        logger.info("Launcher created.");
+        logger.info("Application created.");
 
     }
 
     public void exit() {
+        logger.info("Stopping application.");
         this.downloadTaskManager.cleanUp();
         this.forgeInstaller.cleanUp();
     }
@@ -46,12 +47,12 @@ public class Launcher {
             int height = 400;
             int width = (int) (height * aspectRatio);
 
-            Launcher.this.gui = new GUI("CascadeMod-Installer", width, height, () -> {
+            Application.this.gui = new GUI("CascadeMod-Installer", width, height, () -> {
                 this.exit();
                 logger.info("Successfully closed installer.");
             });
 
-            Launcher.this.gui.loading(true);
+            Application.this.gui.loading(true);
         });
     }
 
@@ -59,6 +60,6 @@ public class Launcher {
         this.gui.setModInstaller(this.modInstaller);
         this.gui.setForgeInstaller(this.forgeInstaller);
         this.gui.updateCheckBox();
-        Launcher.this.gui.loading(false);
+        Application.this.gui.loading(false);
     }
 }
