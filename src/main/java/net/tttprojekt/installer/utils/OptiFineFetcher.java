@@ -38,7 +38,7 @@ public class OptiFineFetcher {
             }
 
             String downloadLink = downloadURL.toString();
-            logger.info(String.format("Download link for OptiFine version %s received. URL: %s", downloadLink, downloadLink));
+            logger.info(String.format("Download link for OptiFine version %s received. URL: %s", version, downloadLink));
 
             htmlPage.cleanUp();
             webClient.close();
