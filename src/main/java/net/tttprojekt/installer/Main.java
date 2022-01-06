@@ -1,4 +1,4 @@
-package net.tttprojekt.cascademode;
+package net.tttprojekt.installer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         printInformation();
         logger.info("Starting application...");
-        new Launcher();
+        new Application();
         logger.info("Application started.");
 
     }

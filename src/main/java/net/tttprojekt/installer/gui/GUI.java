@@ -1,10 +1,13 @@
-package net.tttprojekt.cascademode.gui;
+package net.tttprojekt.installer.gui;
 
+import lombok.Getter;
 import lombok.Setter;
-import net.tttprojekt.cascademode.Main;
-import net.tttprojekt.cascademode.installer.IForgeInstaller;
-import net.tttprojekt.cascademode.installer.IModInstaller;
-import net.tttprojekt.cascademode.utils.MinecraftChecker;
+import net.tttprojekt.installer.Main;
+import net.tttprojekt.installer.download.Download;
+import net.tttprojekt.installer.installer.IForgeInstaller;
+import net.tttprojekt.installer.installer.IModInstaller;
+import net.tttprojekt.installer.utils.CascadeDownloadFetcher;
+import net.tttprojekt.installer.utils.MinecraftChecker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -171,7 +174,6 @@ public class GUI {
         this.labelDownload.setForeground(new Color(159, 37, 37));
 
         this.labelPanel.add(this.labelDownload);
-        this.labelPanel.setVisible(false);
     }
 
     private void createButtons() {
@@ -192,7 +194,7 @@ public class GUI {
             }
             onButtonDownloadModsClicked();
         });
-        this.buttonDownloadForge = createButton("Download Forge", action -> {
+        this.buttonDownloadForge = createButton("Install Forge", action -> {
             if (checkMinecraftRunning()) {
                 return;
             }
@@ -216,8 +218,31 @@ public class GUI {
 
         this.buttonDownloadForge.setEnabled(enabled);
         this.buttonDownloadMods.setEnabled(enabled);
+    }
 
-        this.labelPanel.setVisible(!enabled);
+    private void setStatusLabel(String text, LabelStatus status) {
+        this.labelDownload.setForeground(status.getColor());
+        this.labelDownload.setText(text);
+    }
+
+    private void clearStatusLabel() {
+        setStatusLabel("", LabelStatus.NEUTRAL);
+    }
+
+    public void loading(boolean loading) {
+        this.checkBoxCreateBackup.setVisible(!loading);
+        this.checkBoxDownloadOptiFine.setVisible(!loading);
+        this.checkBoxDownloadJustEnoughItems.setVisible(!loading);
+
+        this.buttonDownloadForge.setVisible(!loading);
+        this.buttonDownloadMods.setVisible(!loading);
+
+        if (loading) {
+            setStatusLabel("Loading downloader...", LabelStatus.WORKING);
+        } else {
+            clearStatusLabel();
+        }
+
     }
 
     private JCheckBox createCheckBox(String title, String tooltip, ItemListener itemListener) {
@@ -232,12 +257,15 @@ public class GUI {
     private void onButtonDownloadModsClicked() {
         if (this.modInstaller == null) return;
         toggleElements(false);
-        this.labelDownload.setText("Downloading mods...");
+        setStatusLabel("Downloading mods...", LabelStatus.WORKING);
+
+        Download.CASCADE_MOD.updateURL(CascadeDownloadFetcher.getLatestVersion());
 
         SwingUtilities.invokeLater(() -> {
             this.modInstaller.backupModFolder();
             this.modInstaller.createModFolder();
             this.modInstaller.downloadMods(() -> {
+                setStatusLabel("Mods downloaded!", LabelStatus.SUCCESS);
                 toggleElements(true);
             });
         });
@@ -248,17 +276,21 @@ public class GUI {
     private void onButtonDownloadForgeClicked() {
         if (this.forgeInstaller == null) return;
         toggleElements(false);
-        this.labelDownload.setText("Downloading forge...");
+        setStatusLabel("Downloading forge...", LabelStatus.WORKING);
 
         SwingUtilities.invokeLater(() -> {
             this.forgeInstaller.setup();
-            this.forgeInstaller.download(() -> {
-                this.labelDownload.setText("Installing forge...");
-                SwingUtilities.invokeLater(() -> {
-                    this.forgeInstaller.install();
-                    this.forgeInstaller.cleanUp();
-                    toggleElements(true);
-                });
+            this.forgeInstaller.download();
+
+            setStatusLabel("Installing forge...", LabelStatus.WORKING);
+            SwingUtilities.invokeLater(() -> {
+                if (this.forgeInstaller.install()) {
+                    setStatusLabel("Successfully installed forge.", LabelStatus.SUCCESS);
+                } else {
+                    setStatusLabel("Failed to install forge.", LabelStatus.FAIL);
+                }
+                this.forgeInstaller.cleanUp();
+                toggleElements(true);
             });
         });
     }
@@ -288,6 +320,21 @@ public class GUI {
                 changeFont(child);
             }
         }
+    }
+
+    enum LabelStatus {
+
+        SUCCESS(new Color(48, 245, 88)),
+        FAIL(new Color(245, 93, 48)),
+        WORKING(new Color(245, 195, 48)),
+        NEUTRAL(Color.BLACK);
+
+        @Getter private final Color color;
+
+        LabelStatus(Color color) {
+            this.color = color;
+        }
+
     }
 
 }

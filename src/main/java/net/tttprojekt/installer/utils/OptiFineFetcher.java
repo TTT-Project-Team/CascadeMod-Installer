@@ -1,10 +1,11 @@
-package net.tttprojekt.cascademode.utils;
+package net.tttprojekt.installer.utils;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
+import net.tttprojekt.installer.download.DownloadTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,7 @@ public class OptiFineFetcher {
     static {
         //Disable HTMLUnit warnings
         java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
+        java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
     }
 
     public static Optional<String> fetchLink(OptiFineVersion version) {
@@ -37,7 +39,7 @@ public class OptiFineFetcher {
             }
 
             String downloadLink = downloadURL.toString();
-            logger.info(String.format("Download link for OptiFine version %s received. URL: %s", downloadLink, downloadLink));
+            logger.info(String.format("Download link for OptiFine version %s received. URL: %s", version, downloadLink));
 
             htmlPage.cleanUp();
             webClient.close();
@@ -47,6 +49,15 @@ public class OptiFineFetcher {
             logger.error(String.format("Error fetching OptiFine download link for version %s", version), e);
             return Optional.empty();
         }
+    }
+
+    public static DownloadTask getDownloadTask(String destination, OptiFineVersion optiFineVersion) {
+        Optional<String> ofURLOptional = OptiFineFetcher.fetchLink(optiFineVersion);
+        if (!ofURLOptional.isPresent()) {
+            logger.error("The OptiFine download link could not be retrieved.");
+            return null;
+        }
+        return DownloadTask.of(ofURLOptional.get(), destination);
     }
 
 }
