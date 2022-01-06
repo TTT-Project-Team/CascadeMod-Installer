@@ -20,6 +20,7 @@ public class OptiFineFetcher {
     static {
         //Disable HTMLUnit warnings
         java.util.logging.Logger.getLogger("com.gargoylesoftware").setLevel(java.util.logging.Level.OFF);
+        java.util.logging.Logger.getLogger("org.apache.http").setLevel(java.util.logging.Level.OFF);
     }
 
     public static Optional<String> fetchLink(OptiFineVersion version) {
