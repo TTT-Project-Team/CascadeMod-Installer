@@ -50,10 +50,10 @@ public class CascadeDownloadFetcher {
     }
 
 
-    public static Optional<String> getLatestVersion() {
+    public static String getLatestVersion() {
         Optional<String> version = getVersion(fetchLatestVersion());
         version.ifPresent(s -> logger.info(String.format("Download link for the latest CascadeMod received: %s", s)));
-        return version;
+        return version.get();
     }
 
     public static Optional<String> getVersion(String version) {
