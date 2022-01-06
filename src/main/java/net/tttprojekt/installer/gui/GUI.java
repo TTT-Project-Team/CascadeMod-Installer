@@ -3,8 +3,10 @@ package net.tttprojekt.installer.gui;
 import lombok.Getter;
 import lombok.Setter;
 import net.tttprojekt.installer.Main;
+import net.tttprojekt.installer.download.Download;
 import net.tttprojekt.installer.installer.IForgeInstaller;
 import net.tttprojekt.installer.installer.IModInstaller;
+import net.tttprojekt.installer.utils.CascadeDownloadFetcher;
 import net.tttprojekt.installer.utils.MinecraftChecker;
 
 import javax.swing.*;
@@ -256,6 +258,8 @@ public class GUI {
         if (this.modInstaller == null) return;
         toggleElements(false);
         setStatusLabel("Downloading mods...", LabelStatus.WORKING);
+
+        Download.CASCADE_MOD.updateURL(CascadeDownloadFetcher.getLatestVersion());
 
         SwingUtilities.invokeLater(() -> {
             this.modInstaller.backupModFolder();
