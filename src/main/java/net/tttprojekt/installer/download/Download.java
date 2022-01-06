@@ -29,4 +29,8 @@ public enum Download {
     boolean isDownloading() {
         return get().isDownloading();
     }
+
+    public void updateURL(String url) {
+        this.downloadTask.setDownloadURL(url);
+    }
 }
