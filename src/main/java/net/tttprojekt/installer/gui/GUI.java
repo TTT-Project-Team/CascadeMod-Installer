@@ -41,14 +41,17 @@ public class GUI {
 
     private JPanel logoBannerPanel;
     private JPanel checkBoxPanel;
-    private JPanel labelPanel;
+    private JPanel downloadLabelPanel;
+    private JPanel authorLabelPanel;
     private JPanel buttonPanel;
 
     private JCheckBox checkBoxCreateBackup;
     private JCheckBox checkBoxDownloadOptiFine;
     private JCheckBox checkBoxDownloadJustEnoughItems;
+    private JCheckBox checkBoxDownloadToggleSprint;
 
     private JLabel labelDownload;
+    private JLabel labelAuthor;
 
     private JButton buttonDownloadMods;
     private JButton buttonDownloadForge;
@@ -84,7 +87,7 @@ public class GUI {
         this.mainFrame.setResizable(false);
         this.mainFrame.setLocationRelativeTo(null);
         this.mainFrame.setLayout(new GridBagLayout());
-        this.mainFrame.setIconImage(this.ICON_IMAGE.getImage());
+        this.mainFrame.setIconImage(ICON_IMAGE.getImage());
 
         this.mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -102,6 +105,7 @@ public class GUI {
         createLogoBanner();
         createCheckBoxes();
         createDownloadLabel();
+        createAuthorLabel();
         createButtons();
     }
 
@@ -153,27 +157,51 @@ public class GUI {
             }
         });
 
+        this.checkBoxDownloadToggleSprint = createCheckBox("Download ToggleSprint", "When enabled ToggleSprint will be downloaded.", itemEvent -> {
+            if (this.modInstaller != null) {
+                this.modInstaller.setDownloadToggleSprint(itemEvent.getStateChange() == ItemEvent.SELECTED);
+            }
+        });
+
         this.checkBoxPanel.add(this.checkBoxCreateBackup);
         this.checkBoxPanel.add(this.checkBoxDownloadOptiFine);
         this.checkBoxPanel.add(this.checkBoxDownloadJustEnoughItems);
+        this.checkBoxPanel.add(this.checkBoxDownloadToggleSprint);
     }
 
     private void createDownloadLabel() {
-        this.labelPanel = new JPanel();
-        this.labelPanel.setLayout(new BoxLayout(this.labelPanel, BoxLayout.Y_AXIS));
-
+        this.downloadLabelPanel = new JPanel();
+        this.downloadLabelPanel.setLayout(new BoxLayout(this.downloadLabelPanel, BoxLayout.Y_AXIS));
 
         this.bagConstraints.gridx = 0;
         this.bagConstraints.gridy = 2;
         this.bagConstraints.insets = new Insets(0, 50, 10, 50);
         this.bagConstraints.weightx = 1;
 
-        this.mainFrame.add(this.labelPanel, this.bagConstraints);
+        this.mainFrame.add(this.downloadLabelPanel, this.bagConstraints);
 
         this.labelDownload = new JLabel("Downloading...");
         this.labelDownload.setForeground(new Color(159, 37, 37));
 
-        this.labelPanel.add(this.labelDownload);
+        this.downloadLabelPanel.add(this.labelDownload);
+    }
+
+    private void createAuthorLabel() {
+        this.authorLabelPanel = new JPanel();
+        this.authorLabelPanel.setLayout(new BoxLayout(this.authorLabelPanel, BoxLayout.Y_AXIS));
+
+        this.bagConstraints.gridx = 1;
+        this.bagConstraints.gridy = 5;
+        this.bagConstraints.insets = new Insets(0, -150, 5, 0);
+        this.bagConstraints.weightx = 1;
+
+        this.mainFrame.add(this.authorLabelPanel, this.bagConstraints);
+
+        this.labelAuthor = new JLabel("Developed by Nico");
+        this.labelAuthor.setForeground(new Color(40, 40, 40));
+
+        this.authorLabelPanel.add(this.labelAuthor);
+
     }
 
     private void createButtons() {
@@ -209,12 +237,14 @@ public class GUI {
         this.checkBoxCreateBackup.setSelected(true);
         this.checkBoxDownloadOptiFine.setSelected(true);
         this.checkBoxDownloadJustEnoughItems.setSelected(true);
+        this.checkBoxDownloadToggleSprint.setSelected(true);
     }
 
     private void toggleElements(boolean enabled) {
         this.checkBoxCreateBackup.setEnabled(enabled);
         this.checkBoxDownloadOptiFine.setEnabled(enabled);
         this.checkBoxDownloadJustEnoughItems.setEnabled(enabled);
+        this.checkBoxDownloadToggleSprint.setEnabled(enabled);
 
         this.buttonDownloadForge.setEnabled(enabled);
         this.buttonDownloadMods.setEnabled(enabled);
@@ -233,9 +263,12 @@ public class GUI {
         this.checkBoxCreateBackup.setVisible(!loading);
         this.checkBoxDownloadOptiFine.setVisible(!loading);
         this.checkBoxDownloadJustEnoughItems.setVisible(!loading);
+        this.checkBoxDownloadToggleSprint.setVisible(!loading);
 
         this.buttonDownloadForge.setVisible(!loading);
         this.buttonDownloadMods.setVisible(!loading);
+
+        this.labelAuthor.setVisible(!loading);
 
         if (loading) {
             setStatusLabel("Loading downloader...", LabelStatus.WORKING);
