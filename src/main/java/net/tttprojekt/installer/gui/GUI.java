@@ -197,7 +197,7 @@ public class GUI {
 
         this.mainFrame.add(this.authorLabelPanel, this.bagConstraints);
 
-        this.labelAuthor = new JLabel("Made by Nico");
+        this.labelAuthor = new JLabel("Developed by Nico");
         this.labelAuthor.setForeground(new Color(40, 40, 40));
 
         this.authorLabelPanel.add(this.labelAuthor);
