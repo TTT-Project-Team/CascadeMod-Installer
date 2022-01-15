@@ -41,7 +41,8 @@ public class GUI {
 
     private JPanel logoBannerPanel;
     private JPanel checkBoxPanel;
-    private JPanel labelPanel;
+    private JPanel downloadLabelPanel;
+    private JPanel authorLabelPanel;
     private JPanel buttonPanel;
 
     private JCheckBox checkBoxCreateBackup;
@@ -49,6 +50,7 @@ public class GUI {
     private JCheckBox checkBoxDownloadJustEnoughItems;
 
     private JLabel labelDownload;
+    private JLabel labelAuthor;
 
     private JButton buttonDownloadMods;
     private JButton buttonDownloadForge;
@@ -84,7 +86,7 @@ public class GUI {
         this.mainFrame.setResizable(false);
         this.mainFrame.setLocationRelativeTo(null);
         this.mainFrame.setLayout(new GridBagLayout());
-        this.mainFrame.setIconImage(this.ICON_IMAGE.getImage());
+        this.mainFrame.setIconImage(ICON_IMAGE.getImage());
 
         this.mainFrame.addWindowListener(new WindowAdapter() {
             @Override
@@ -102,6 +104,7 @@ public class GUI {
         createLogoBanner();
         createCheckBoxes();
         createDownloadLabel();
+        createAuthorLabel();
         createButtons();
     }
 
@@ -159,21 +162,38 @@ public class GUI {
     }
 
     private void createDownloadLabel() {
-        this.labelPanel = new JPanel();
-        this.labelPanel.setLayout(new BoxLayout(this.labelPanel, BoxLayout.Y_AXIS));
-
+        this.downloadLabelPanel = new JPanel();
+        this.downloadLabelPanel.setLayout(new BoxLayout(this.downloadLabelPanel, BoxLayout.Y_AXIS));
 
         this.bagConstraints.gridx = 0;
         this.bagConstraints.gridy = 2;
         this.bagConstraints.insets = new Insets(0, 50, 10, 50);
         this.bagConstraints.weightx = 1;
 
-        this.mainFrame.add(this.labelPanel, this.bagConstraints);
+        this.mainFrame.add(this.downloadLabelPanel, this.bagConstraints);
 
         this.labelDownload = new JLabel("Downloading...");
         this.labelDownload.setForeground(new Color(159, 37, 37));
 
-        this.labelPanel.add(this.labelDownload);
+        this.downloadLabelPanel.add(this.labelDownload);
+    }
+
+    private void createAuthorLabel() {
+        this.authorLabelPanel = new JPanel();
+        this.authorLabelPanel.setLayout(new BoxLayout(this.authorLabelPanel, BoxLayout.Y_AXIS));
+
+        this.bagConstraints.gridx = 1;
+        this.bagConstraints.gridy = 5;
+        this.bagConstraints.insets = new Insets(0, -150, 5, 0);
+        this.bagConstraints.weightx = 1;
+
+        this.mainFrame.add(this.authorLabelPanel, this.bagConstraints);
+
+        this.labelAuthor = new JLabel("Made by Nico");
+        this.labelAuthor.setForeground(new Color(40, 40, 40));
+
+        this.authorLabelPanel.add(this.labelAuthor);
+
     }
 
     private void createButtons() {
@@ -236,6 +256,8 @@ public class GUI {
 
         this.buttonDownloadForge.setVisible(!loading);
         this.buttonDownloadMods.setVisible(!loading);
+
+        this.labelAuthor.setVisible(!loading);
 
         if (loading) {
             setStatusLabel("Loading downloader...", LabelStatus.WORKING);
