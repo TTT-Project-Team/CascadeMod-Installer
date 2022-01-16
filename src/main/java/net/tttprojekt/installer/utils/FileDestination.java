@@ -10,7 +10,7 @@ public class FileDestination {
     private static final String FILE_DESTINATION_MOD = MODS_FOLDER + "/Cascade Mod.jar";
     private static final String FILE_DESTINATION_OPTIFINE = MODS_FOLDER + "/OptiFine_1.12.2_HD_U_G5.jar";
     private static final String FILE_DESTINATION_JEI = MODS_FOLDER + "/jei_1.12.2-4.16.1.301.jar";
-    private static final String FILE_DESTINATION_TOGGLE_SPRINT = MODS_FOLDER + "/BetterSprinting-1.12.2-v3.0.0.jar";
+    private static final String FILE_DESTINATION_TOGGLE_SPRINT = MODS_FOLDER + "/BetterSprinting-1.12.2-v3.0.1.jar";
 
     private static final String FORGE_INSTALL_FOLDER_PATH = getForgeInstallFolderPath().getAbsolutePath();
     private static final String FORGE_INSTALLER_FILE = FORGE_INSTALL_FOLDER_PATH + "/forge-1.12.2-14.23.5.2855-installer.jar";
