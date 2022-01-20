@@ -24,7 +24,7 @@ public class ModInstaller implements IModInstaller {
     @Getter @Setter private boolean createBackup;
     @Setter private boolean downloadOptiFine;
     @Setter private boolean downloadJustEnoughItems;
-    @Setter private boolean downloadToggleSprint;
+    //@Setter private boolean downloadToggleSprint;
 
     public ModInstaller(DownloadTaskManager downloadTaskManager) {
         logger.info("Creating download tasks...");
@@ -82,7 +82,7 @@ public class ModInstaller implements IModInstaller {
         this.downloadTaskManager.submitAsync(Download.CASCADE_MOD);
         if (this.downloadOptiFine) this.downloadTaskManager.submitAsync(Download.OPTIFINE);
         if (this.downloadJustEnoughItems) this.downloadTaskManager.submitAsync(Download.JEI);
-        if (this.downloadToggleSprint) this.downloadTaskManager.submitAsync(Download.TOGGLE_SPRINT);
+        //if (this.downloadToggleSprint) this.downloadTaskManager.submitAsync(Download.TOGGLE_SPRINT);
 
         this.downloadTaskManager.waitForDownloads();
         downloadRunnable.run();

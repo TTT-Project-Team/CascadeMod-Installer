@@ -48,7 +48,7 @@ public class GUI {
     private JCheckBox checkBoxCreateBackup;
     private JCheckBox checkBoxDownloadOptiFine;
     private JCheckBox checkBoxDownloadJustEnoughItems;
-    private JCheckBox checkBoxDownloadToggleSprint;
+//    private JCheckBox checkBoxDownloadToggleSprint;
 
     private JLabel labelDownload;
     private JLabel labelAuthor;
@@ -157,16 +157,16 @@ public class GUI {
             }
         });
 
-        this.checkBoxDownloadToggleSprint = createCheckBox("Download ToggleSprint", "When enabled ToggleSprint will be downloaded.", itemEvent -> {
-            if (this.modInstaller != null) {
-                this.modInstaller.setDownloadToggleSprint(itemEvent.getStateChange() == ItemEvent.SELECTED);
-            }
-        });
+//        this.checkBoxDownloadToggleSprint = createCheckBox("Download ToggleSprint", "When enabled ToggleSprint will be downloaded.", itemEvent -> {
+//            if (this.modInstaller != null) {
+//                this.modInstaller.setDownloadToggleSprint(itemEvent.getStateChange() == ItemEvent.SELECTED);
+//            }
+//        });
 
         this.checkBoxPanel.add(this.checkBoxCreateBackup);
         this.checkBoxPanel.add(this.checkBoxDownloadOptiFine);
         this.checkBoxPanel.add(this.checkBoxDownloadJustEnoughItems);
-        this.checkBoxPanel.add(this.checkBoxDownloadToggleSprint);
+//        this.checkBoxPanel.add(this.checkBoxDownloadToggleSprint);
     }
 
     private void createDownloadLabel() {
@@ -237,14 +237,14 @@ public class GUI {
         this.checkBoxCreateBackup.setSelected(true);
         this.checkBoxDownloadOptiFine.setSelected(true);
         this.checkBoxDownloadJustEnoughItems.setSelected(true);
-        this.checkBoxDownloadToggleSprint.setSelected(true);
+        //this.checkBoxDownloadToggleSprint.setSelected(true);
     }
 
     private void toggleElements(boolean enabled) {
         this.checkBoxCreateBackup.setEnabled(enabled);
         this.checkBoxDownloadOptiFine.setEnabled(enabled);
         this.checkBoxDownloadJustEnoughItems.setEnabled(enabled);
-        this.checkBoxDownloadToggleSprint.setEnabled(enabled);
+        //this.checkBoxDownloadToggleSprint.setEnabled(enabled);
 
         this.buttonDownloadForge.setEnabled(enabled);
         this.buttonDownloadMods.setEnabled(enabled);
@@ -263,7 +263,7 @@ public class GUI {
         this.checkBoxCreateBackup.setVisible(!loading);
         this.checkBoxDownloadOptiFine.setVisible(!loading);
         this.checkBoxDownloadJustEnoughItems.setVisible(!loading);
-        this.checkBoxDownloadToggleSprint.setVisible(!loading);
+        //this.checkBoxDownloadToggleSprint.setVisible(!loading);
 
         this.buttonDownloadForge.setVisible(!loading);
         this.buttonDownloadMods.setVisible(!loading);

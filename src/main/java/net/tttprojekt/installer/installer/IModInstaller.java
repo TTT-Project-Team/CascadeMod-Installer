@@ -14,6 +14,6 @@ public interface IModInstaller {
 
     void setDownloadJustEnoughItems(boolean download);
 
-    void setDownloadToggleSprint(boolean download);
+    //void setDownloadToggleSprint(boolean download);
 
 }
